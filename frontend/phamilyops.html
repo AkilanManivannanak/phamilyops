@@ -706,6 +706,7 @@ textarea { resize: vertical; min-height: 90px; }
 
     <div class="nav-section">
       <div class="nav-section-label">Analytics</div>
+      <button class="nav-item" onclick="showPanel('calendar')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar &amp; Meetings</button>
       <button class="nav-item" onclick="showPanel('analytics')">
         <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Live Analytics
@@ -1423,6 +1424,135 @@ textarea { resize: vertical; min-height: 90px; }
       </div>
     </div>
 
+
+    <!-- ─── CALENDAR & MEETINGS PANEL ─── -->
+    <div class="panel" id="panel-calendar">
+      <div class="section-header">
+        <div class="section-title">Calendar & Meetings</div>
+        <div class="section-desc">Schedule interviews · Mark important dates · Get reminders before every meeting</div>
+      </div>
+    
+      <!-- TOP ROW: Calendar + Upcoming -->
+      <div class="grid-2" style="margin-bottom:20px;">
+    
+        <!-- LEFT: Full Calendar -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,var(--phamily-purple),var(--phamily-purple-light));padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
+            <button onclick="calPrev()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">‹</button>
+            <div style="color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;" id="cal-month-label">May 2026</div>
+            <button onclick="calNext()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px;">
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">SUN</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">MON</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">TUE</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">WED</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">THU</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">FRI</div>
+              <div style="text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px;">SAT</div>
+            </div>
+            <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;"></div>
+          </div>
+        </div>
+    
+        <!-- RIGHT: Schedule New Meeting -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">Schedule a Meeting</div>
+          <div class="form-group">
+            <label>Meeting Title</label>
+            <input type="text" id="meet-title" placeholder="e.g. Interview — Jordan Chen"/>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="text" id="meet-date" placeholder="e.g. 2026-06-03" readonly style="cursor:pointer;" onclick="this.removeAttribute('readonly');this.type='date';"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group">
+              <label>Start Time</label>
+              <input type="time" id="meet-time" value="10:00"/>
+            </div>
+            <div class="form-group">
+              <label>Duration</label>
+              <select id="meet-duration">
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60" selected>1 hour</option>
+                <option value="90">1.5 hours</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Meeting Type</label>
+            <select id="meet-type">
+              <option value="interview">Candidate Interview</option>
+              <option value="onboarding">Onboarding Session</option>
+              <option value="team">Team Sync</option>
+              <option value="review">Performance Review</option>
+              <option value="travel">Travel Planning</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Attendees (comma separated)</label>
+            <input type="text" id="meet-attendees" placeholder="e.g. Jordan Chen, HR Manager"/>
+          </div>
+          <div class="form-group">
+            <label>Reminder</label>
+            <select id="meet-reminder">
+              <option value="15">15 minutes before</option>
+              <option value="30" selected>30 minutes before</option>
+              <option value="60">1 hour before</option>
+              <option value="1440">1 day before</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="scheduleMeeting()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Schedule Meeting
+          </button>
+        </div>
+      </div>
+    
+      <!-- BOTTOM ROW: Upcoming meetings + Reminders -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Upcoming Meetings</div>
+            <span id="meeting-count" style="font-size:11px;color:var(--text-muted);">0 scheduled</span>
+          </div>
+          <div id="upcoming-meetings">
+            <div style="text-align:center;padding:30px;color:var(--text-muted);">
+              <div style="font-size:32px;margin-bottom:8px;">📅</div>
+              <div style="font-size:12px;">No meetings scheduled yet. Add one above.</div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Active Reminders</div>
+            <span id="reminder-count" style="font-size:11px;background:var(--phamily-green-xlight);color:var(--phamily-green-dark);padding:2px 8px;border-radius:20px;font-weight:600;">0 active</span>
+          </div>
+          <div id="reminders-list">
+            <div style="text-align:center;padding:30px;color:var(--text-muted);">
+              <div style="font-size:32px;margin-bottom:8px;">🔔</div>
+              <div style="font-size:12px;">Reminders appear here when meetings are scheduled.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);">
+            <div style="font-size:11px;color:var(--phamily-purple);font-weight:600;">🔔 Browser notifications enabled</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">You'll get a popup reminder before each meeting</div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Notification toast -->
+      <div id="meeting-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--phamily-purple);color:white;padding:14px 20px;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);font-size:13px;font-weight:600;z-index:9999;max-width:320px;animation:slideIn 0.3s ease;">
+        <div id="toast-msg"></div>
+      </div>
+    </div>
+    
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1997,4 +2127,337 @@ setDynamicGreeting();
 document.addEventListener('DOMContentLoaded', () => {
   loadDashboard();
 });
+
+
+// ── CALENDAR MODULE ──
+// ============================================================
+// PhamilyOps — Calendar & Meetings Module
+// ============================================================
+
+// State
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let meetings = JSON.parse(sessionStorage.getItem('phamilyops_meetings') || '[]');
+let reminderTimers = [];
+
+const MONTH_NAMES = ['January','February','March','April','May','June',
+                     'July','August','September','October','November','December'];
+const TYPE_COLORS = {
+  interview: 'var(--phamily-purple)',
+  onboarding: 'var(--phamily-green)',
+  team: '#3B82F6',
+  review: '#F59E0B',
+  travel: '#EC4899',
+  other: '#6B7280'
+};
+const TYPE_LABELS = {
+  interview: '🎯 Interview',
+  onboarding: '✅ Onboarding',
+  team: '👥 Team Sync',
+  review: '📋 Review',
+  travel: '✈️ Travel',
+  other: '📌 Other'
+};
+
+function saveMeetings() {
+  sessionStorage.setItem('phamilyops_meetings', JSON.stringify(meetings));
+}
+
+function renderCalendar() {
+  const label = document.getElementById('cal-month-label');
+  const grid = document.getElementById('cal-grid');
+  if (!label || !grid) return;
+
+  label.textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div style="height:36px;"></div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d;
+    const dayMeetings = meetings.filter(m => m.date === dateStr);
+    const hasMeeting = dayMeetings.length > 0;
+
+    let style = `height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:500;position:relative;flex-direction:column;gap:2px;`;
+    if (isToday) {
+      style += `background:var(--phamily-purple);color:white;font-weight:800;`;
+    } else if (hasMeeting) {
+      style += `background:var(--phamily-purple-xlight);color:var(--phamily-purple);font-weight:700;`;
+    } else {
+      style += `color:var(--text-primary);`;
+    }
+
+    html += `<div style="${style}" onclick="selectDay('${dateStr}')" title="${hasMeeting ? dayMeetings.length + ' meeting(s)' : 'Click to add meeting'}">
+      <span>${d}</span>
+      ${hasMeeting ? `<div style="width:5px;height:5px;border-radius:50%;background:${isToday ? 'white' : TYPE_COLORS[dayMeetings[0].type]};"></div>` : ''}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function calPrev() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function calNext() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function selectDay(dateStr) {
+  const dateInput = document.getElementById('meet-date');
+  if (dateInput) {
+    dateInput.type = 'date';
+    dateInput.value = dateStr;
+    dateInput.removeAttribute('readonly');
+  }
+  // Show meetings for this day
+  const dayMeetings = meetings.filter(m => m.date === dateStr);
+  if (dayMeetings.length > 0) {
+    showToast(`📅 ${dayMeetings.length} meeting(s) on ${dateStr} — see upcoming list below`);
+  }
+}
+
+function scheduleMeeting() {
+  const title = document.getElementById('meet-title')?.value?.trim();
+  const date = document.getElementById('meet-date')?.value;
+  const time = document.getElementById('meet-time')?.value;
+  const duration = document.getElementById('meet-duration')?.value;
+  const type = document.getElementById('meet-type')?.value;
+  const attendees = document.getElementById('meet-attendees')?.value?.trim();
+  const reminder = parseInt(document.getElementById('meet-reminder')?.value || '30');
+
+  if (!title) { showToast('❌ Please enter a meeting title', true); return; }
+  if (!date) { showToast('❌ Please select a date', true); return; }
+  if (!time) { showToast('❌ Please select a time', true); return; }
+
+  const meeting = {
+    id: Date.now().toString(),
+    title,
+    date,
+    time,
+    duration: parseInt(duration),
+    type,
+    attendees: attendees || 'HR Team',
+    reminder,
+    created: new Date().toISOString()
+  };
+
+  meetings.push(meeting);
+  meetings.sort((a, b) => `${a.date}${a.time}` > `${b.date}${b.time}` ? 1 : -1);
+  saveMeetings();
+
+  // Set browser reminder
+  scheduleReminder(meeting);
+
+  // Reset form
+  document.getElementById('meet-title').value = '';
+  document.getElementById('meet-date').value = '';
+  document.getElementById('meet-attendees').value = '';
+
+  renderCalendar();
+  renderUpcoming();
+  renderReminders();
+  showToast(`✅ "${title}" scheduled for ${formatDate(date)} at ${formatTime(time)}`);
+
+  // Request notification permission
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function scheduleReminder(meeting) {
+  const meetingDateTime = new Date(`${meeting.date}T${meeting.time}`);
+  const reminderTime = new Date(meetingDateTime.getTime() - meeting.reminder * 60 * 1000);
+  const now = new Date();
+  const msUntilReminder = reminderTime.getTime() - now.getTime();
+
+  if (msUntilReminder > 0) {
+    const timer = setTimeout(() => {
+      // Browser notification
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`⏰ Meeting in ${meeting.reminder} minutes`, {
+          body: `${meeting.title}\nAttendees: ${meeting.attendees}`,
+          icon: '/favicon.ico'
+        });
+      }
+      // In-app toast
+      showToast(`⏰ Reminder: "${meeting.title}" starts in ${meeting.reminder} minutes!`, false, 8000);
+      renderReminders();
+    }, msUntilReminder);
+    reminderTimers.push({ id: meeting.id, timer });
+  }
+}
+
+function deleteMeeting(id) {
+  meetings = meetings.filter(m => m.id !== id);
+  // Clear timer
+  const timerObj = reminderTimers.find(t => t.id === id);
+  if (timerObj) clearTimeout(timerObj.timer);
+  reminderTimers = reminderTimers.filter(t => t.id !== id);
+  saveMeetings();
+  renderCalendar();
+  renderUpcoming();
+  renderReminders();
+  showToast('🗑️ Meeting deleted');
+}
+
+function renderUpcoming() {
+  const container = document.getElementById('upcoming-meetings');
+  const countEl = document.getElementById('meeting-count');
+  if (!container) return;
+
+  const now = new Date();
+  const upcoming = meetings.filter(m => new Date(`${m.date}T${m.time}`) >= now);
+  if (countEl) countEl.textContent = `${upcoming.length} scheduled`;
+
+  if (upcoming.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted);">
+      <div style="font-size:32px;margin-bottom:8px;">📅</div>
+      <div style="font-size:12px;">No upcoming meetings. Schedule one above!</div>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = upcoming.slice(0, 6).map(m => {
+    const color = TYPE_COLORS[m.type] || '#6B7280';
+    const label = TYPE_LABELS[m.type] || '📌 Other';
+    const isToday = m.date === new Date().toISOString().split('T')[0];
+    const isTomorrow = m.date === new Date(Date.now()+86400000).toISOString().split('T')[0];
+    const dayLabel = isToday ? '🔥 Today' : isTomorrow ? '📅 Tomorrow' : formatDate(m.date);
+
+    return `<div style="display:flex;gap:12px;padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;background:var(--white);align-items:flex-start;">
+      <div style="width:4px;align-self:stretch;border-radius:4px;background:${color};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:3px;">${m.title}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${dayLabel} · ${formatTime(m.time)} · ${m.duration} min</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:10px;background:var(--bg);color:var(--text-secondary);">${label}</span>
+          <span style="font-size:9px;color:var(--text-muted);">👥 ${m.attendees}</span>
+          <span style="font-size:9px;color:var(--phamily-purple);">🔔 ${m.reminder}m before</span>
+        </div>
+      </div>
+      <button onclick="deleteMeeting('${m.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:0;line-height:1;" title="Delete meeting">×</button>
+    </div>`;
+  }).join('');
+}
+
+function renderReminders() {
+  const container = document.getElementById('reminders-list');
+  const countEl = document.getElementById('reminder-count');
+  if (!container) return;
+
+  const now = new Date();
+  const active = meetings.filter(m => {
+    const meetTime = new Date(`${m.date}T${m.time}`);
+    const remTime = new Date(meetTime.getTime() - m.reminder * 60 * 1000);
+    return meetTime > now && remTime > now;
+  });
+
+  if (countEl) countEl.textContent = `${active.length} active`;
+
+  if (active.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);">
+      <div style="font-size:24px;margin-bottom:6px;">🔔</div>
+      <div style="font-size:11px;">No active reminders. Schedule meetings to get reminders.</div>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = active.slice(0, 5).map(m => {
+    const meetTime = new Date(`${m.date}T${m.time}`);
+    const remTime = new Date(meetTime.getTime() - m.reminder * 60 * 1000);
+    const msLeft = remTime.getTime() - now.getTime();
+    const hLeft = Math.floor(msLeft / 3600000);
+    const mLeft = Math.floor((msLeft % 3600000) / 60000);
+    const timeLeft = hLeft > 0 ? `${hLeft}h ${mLeft}m until reminder` : `${mLeft}m until reminder`;
+
+    return `<div style="display:flex;gap:10px;align-items:center;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:8px;">
+      <div style="font-size:20px;">🔔</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-primary);">${m.title}</div>
+        <div style="font-size:10px;color:var(--phamily-purple);">${timeLeft}</div>
+        <div style="font-size:10px;color:var(--text-muted);">${formatDate(m.date)} at ${formatTime(m.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function formatTime(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2,'0')} ${period}`;
+}
+
+function showToast(msg, isError = false, duration = 3500) {
+  const toast = document.getElementById('meeting-toast');
+  const toastMsg = document.getElementById('toast-msg');
+  if (!toast || !toastMsg) return;
+  toastMsg.textContent = msg;
+  toast.style.background = isError ? '#DC2626' : 'var(--phamily-purple)';
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, duration);
+}
+
+// Seed some demo meetings on first load
+function seedDemoMeetings() {
+  if (meetings.length > 0) return;
+  const today = new Date();
+  const fmt = (d) => d.toISOString().split('T')[0];
+  const tomorrow = new Date(today.getTime() + 86400000);
+  const dayAfter = new Date(today.getTime() + 172800000);
+
+  meetings = [
+    { id: '1', title: 'Interview — Jordan Chen', date: fmt(tomorrow), time: '10:00',
+      duration: 60, type: 'interview', attendees: 'HR Manager, Jordan Chen', reminder: 30, created: new Date().toISOString() },
+    { id: '2', title: 'Intern Onboarding — Week 1', date: fmt(dayAfter), time: '09:00',
+      duration: 90, type: 'onboarding', attendees: 'All Summer Interns, HR Team', reminder: 60, created: new Date().toISOString() },
+    { id: '3', title: 'HR Ops Weekly Sync', date: fmt(new Date(today.getTime() + 4*86400000)), time: '14:00',
+      duration: 45, type: 'team', attendees: 'HR Operations Team', reminder: 15, created: new Date().toISOString() },
+  ];
+  saveMeetings();
+  meetings.forEach(scheduleReminder);
+}
+
+// Init calendar when panel opens
+const _origShowPanel = window.showPanel;
+window.showPanel = function(name) {
+  _origShowPanel(name);
+  if (name === 'calendar') {
+    seedDemoMeetings();
+    renderCalendar();
+    renderUpcoming();
+    renderReminders();
+    // Update navMap for calendar
+    document.getElementById('topbar-title').textContent = 'Calendar & Meetings';
+    document.getElementById('topbar-subtitle').textContent = 'Schedule interviews · Get reminders · Organize your hiring calendar';
+  }
+};
+
+// Tick reminders every minute to keep display fresh
+setInterval(() => {
+  if (document.getElementById('panel-calendar')?.classList.contains('active')) {
+    renderReminders();
+  }
+}, 60000);
+
 </script>
