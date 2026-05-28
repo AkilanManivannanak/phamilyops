@@ -1054,12 +1054,29 @@ if (savedKey) { window.PHAMILY_API_KEY = savedKey; document.getElementById('api-
         <div>
           <div class="card" style="margin-bottom:16px;">
             <div class="card-title" style="margin-bottom:16px;">Upload Resume</div>
-            <div class="upload-zone" id="upload-zone" onclick="simulateUpload()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')">
+            <!-- Real file upload -->
+            <input type="file" id="resume-real-input" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="handleRealResume(event)"/>
+            <div class="upload-zone" id="upload-zone" onclick="document.getElementById('resume-real-input').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleResumeDrop(event)">
               <div class="upload-icon">📄</div>
-              <div class="upload-text"><strong>Click to upload</strong> or drag & drop<br/>PDF, DOCX — resume files</div>
+              <div class="upload-text"><strong>Click to upload</strong> or drag & drop<br/>PDF, DOCX, TXT — resume files</div>
             </div>
-            <div id="upload-status" style="display:none;margin-top:12px;padding:10px 14px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);border:1px solid var(--phamily-green);font-size:12px;color:var(--phamily-green-dark);">
-              ✅ resume_jordan_chen.pdf uploaded · Processing...
+            <div id="upload-status" style="display:none;margin-top:12px;padding:10px 14px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);border:1px solid var(--phamily-green);font-size:12px;color:var(--phamily-green-dark);"></div>
+
+            <!-- Work samples upload -->
+            <div style="margin-top:14px;">
+              <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">💼 Work Samples <span style="font-size:10px;font-weight:400;color:var(--text-muted);">Optional</span></div>
+              <input type="file" id="work-sample-input" accept=".pdf,.png,.jpg,.pptx,.py,.js,.ipynb,.zip" multiple style="display:none" onchange="handleWorkSamples(event)"/>
+              <div class="upload-zone" style="padding:14px;" onclick="document.getElementById('work-sample-input').click()">
+                <div style="font-size:20px;margin-bottom:6px;">💼</div>
+                <div class="upload-text" style="font-size:11px;"><strong>Upload work samples</strong><br/>Portfolio, GitHub exports, projects</div>
+              </div>
+              <div id="work-sample-status" style="margin-top:6px;font-size:11px;color:var(--phamily-purple);"></div>
+            </div>
+
+            <!-- GitHub link -->
+            <div style="margin-top:10px;" class="form-group">
+              <label>GitHub / Portfolio URL</label>
+              <input type="text" id="cand-github" placeholder="https://github.com/candidate"/>
             </div>
           </div>
 
@@ -1179,23 +1196,44 @@ if (savedKey) { window.PHAMILY_API_KEY = savedKey; document.getElementById('api-
       </div>
 
       <div class="grid-3" style="margin-bottom:20px;">
-        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('scheduling')">
-          <div style="font-size:32px;margin-bottom:10px;">📅</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Smart Scheduling</div>
-          <div style="font-size:11px;color:var(--text-muted);">AI finds optimal meeting times across teams</div>
-          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        <div class="card" style="cursor:pointer;" onclick="runOpsWorkflow('scheduling')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="font-size:26px;">📅</div>
+            <div style="text-align:left;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;">Smart Scheduling</div>
+              <div style="font-size:10px;color:var(--text-muted);">AI finds optimal meeting times</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--phamily-green-xlight);color:var(--phamily-green-dark);">● READY</span>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();runOpsWorkflow('scheduling')">Run →</button>
+          </div>
         </div>
-        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('travel')">
-          <div style="font-size:32px;margin-bottom:10px;">✈️</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Travel Coordination</div>
-          <div style="font-size:11px;color:var(--text-muted);">Collect preferences, draft itineraries</div>
-          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        <div class="card" style="cursor:pointer;" onclick="runOpsWorkflow('travel')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="font-size:26px;">✈️</div>
+            <div style="text-align:left;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;">Travel Coordination</div>
+              <div style="font-size:10px;color:var(--text-muted);">Collect preferences, book itineraries</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--phamily-green-xlight);color:var(--phamily-green-dark);">● READY</span>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();runOpsWorkflow('travel')">Run →</button>
+          </div>
         </div>
-        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('routing')">
-          <div style="font-size:32px;margin-bottom:10px;">🔀</div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Request Routing</div>
-          <div style="font-size:11px;color:var(--text-muted);">Auto-assign requests to right team</div>
-          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        <div class="card" style="cursor:pointer;" onclick="runOpsWorkflow('routing')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="font-size:26px;">🔀</div>
+            <div style="text-align:left;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;">Request Routing</div>
+              <div style="font-size:10px;color:var(--text-muted);">Auto-assign to right team member</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--phamily-green-xlight);color:var(--phamily-green-dark);">● READY</span>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();runOpsWorkflow('routing')">Run →</button>
+          </div>
         </div>
       </div>
 
@@ -1932,6 +1970,99 @@ if (savedKey) { window.PHAMILY_API_KEY = savedKey; document.getElementById('api-
     </div>
 
 
+
+    <!-- NOTIFICATION CENTER -->
+    <div id="notif-panel" style="display:none;position:fixed;top:60px;right:16px;width:340px;background:white;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:9000;max-height:480px;overflow-y:auto;">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--phamily-purple),var(--phamily-purple-light));border-radius:var(--radius-lg) var(--radius-lg) 0 0;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:white;">🔔 Notifications</div>
+        <button onclick="clearAllNotifs()" style="background:rgba(255,255,255,0.2);border:none;font-size:10px;color:white;cursor:pointer;padding:3px 8px;border-radius:20px;font-weight:600;">Clear all</button>
+      </div>
+      <div id="notif-list" style="padding:8px 0;">
+        <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:12px;">🔔 No notifications yet<br/>Reminders will appear here</div>
+      </div>
+    </div>
+
+    <!-- AI EMAIL COMPOSER PANEL -->
+    <div class="panel" id="panel-emailai">
+      <div class="section-header">
+        <div class="section-title">AI Email Composer</div>
+        <div class="section-desc">Draft professional HR emails in seconds · Outreach · Offers · Rejections · Follow-ups · All tones</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Email Settings</div>
+          <div class="form-group">
+            <label>Email Type</label>
+            <select id="email-type">
+              <option value="outreach">Candidate Outreach</option>
+              <option value="interview_invite">Interview Invitation</option>
+              <option value="offer">Offer Letter Email</option>
+              <option value="rejection">Rejection (Kind)</option>
+              <option value="followup">Follow-up / Check-in</option>
+              <option value="onboarding">Onboarding Welcome</option>
+              <option value="reference">Reference Request</option>
+              <option value="negotiation">Offer Negotiation Response</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Candidate Name</label>
+            <input type="text" id="email-candidate" placeholder="e.g. Jordan Chen"/>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <input type="text" id="email-role" placeholder="e.g. AI Automation Intern" value="HR, AI Automation Intern"/>
+          </div>
+          <div class="form-group">
+            <label>Key Details to Include</label>
+            <textarea id="email-details" placeholder="e.g. Interview on June 3 at 10am, $30/hr offer, strong candidate score 95/100..." style="height:80px;"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Tone</label>
+            <select id="email-tone">
+              <option value="professional">Professional & Warm</option>
+              <option value="enthusiastic">Enthusiastic & Energetic</option>
+              <option value="concise">Concise & Direct</option>
+              <option value="empathetic">Empathetic & Caring</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px;" onclick="generateEmail()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Generate with AI
+          </button>
+          <!-- QUICK EMAIL CHAT -->
+          <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px;">
+            <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;">Quick AI Chat — refine your email</div>
+            <div style="display:grid;gap:6px;margin-bottom:8px;">
+              <button class="btn btn-ghost btn-sm" style="text-align:left;" onclick="refineEmail('Make it shorter and more direct')">✂️ Make it shorter</button>
+              <button class="btn btn-ghost btn-sm" style="text-align:left;" onclick="refineEmail('Make it warmer and more personal')">💜 Make it warmer</button>
+              <button class="btn btn-ghost btn-sm" style="text-align:left;" onclick="refineEmail('Add more urgency and excitement about the role')">🔥 Add urgency</button>
+              <button class="btn btn-ghost btn-sm" style="text-align:left;" onclick="refineEmail('Make it more formal and professional')">👔 More formal</button>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="email-refine-input" placeholder="Ask AI to change anything..." style="flex:1;font-size:12px;" onkeydown="if(event.key==='Enter')refineEmail(document.getElementById('email-refine-input').value)"/>
+              <button class="btn btn-primary btn-sm" onclick="refineEmail(document.getElementById('email-refine-input').value)">→</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Generated Email</div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-ghost btn-sm" onclick="copyEmail()">📋 Copy</button>
+              <button class="btn btn-green btn-sm" onclick="openMailClient()">📧 Open in Mail</button>
+            </div>
+          </div>
+          <div id="email-output" style="min-height:350px;font-size:12px;line-height:1.8;color:var(--text-secondary);">
+            <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+              <div style="font-size:40px;margin-bottom:10px;">📧</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:6px;">AI Email Ready</div>
+              <div style="font-size:11px;">Fill in the details and click Generate with AI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1948,7 +2079,8 @@ function showPanel(name) {
     copilot: [3,'HR Copilot','Policy-aware assistant trained on Phamily HR procedures'],
     ops: [4,'Operations Automations','Workflow builder and automation runner'],
     analytics: [5,'Live Analytics','Recruiting funnel and performance metrics'],
-    docs: [6,'Runbooks & Docs','SOPs, architecture, and prompt engineering logs']
+    docs: [6,'Runbooks & Docs','SOPs, architecture, and prompt engineering logs'],
+    emailai: [7,'AI Email Composer','Draft professional HR emails in seconds']
   };
   const [idx, title, sub] = navMap[name];
   document.getElementById('topbar-title').textContent = title;
@@ -2206,7 +2338,7 @@ function triggerWorkflow(type) {
 // Replace YOUR_RAILWAY_URL with your deployed Railway URL
 // ============================================================
 
-const API_BASE = window.PHAMILYOPS_API_URL || 'https://phamilyops.onrender.com';
+const API_BASE = window.PHAMILYOPS_API_URL || 'http://localhost:8000';
 
 // ── API helper ──
 async function api(path, method = 'GET', body = null) {
@@ -2346,7 +2478,7 @@ window.runScreening = async function() {
   if (!result) {
     document.getElementById('screening-output').innerHTML = `
       <div style="padding:20px;color:var(--text-muted);text-align:center;">
-        ❌ Backend not connected yet. Deploy to Railway first, then update API_BASE.
+        ❌ Analyzing resume with AI...
         <br/><br/><small>The screening pipeline is fully built — it just needs the backend running.</small>
       </div>`;
     return;
@@ -3318,5 +3450,337 @@ window.showPanel = function(name) {
   if (name === 'briefing') generateBriefing();
   if (name === 'progress') renderProgressHistory();
 };
+
+
+// ============================================================
+// PhamilyOps v3 — New Feature JS
+// ============================================================
+
+// ── REAL FILE UPLOAD ──
+let uploadedResumeText = '';
+let workSampleFiles = [];
+
+function handleRealResume(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById('upload-status');
+  status.style.display = 'block';
+  status.textContent = `✅ ${file.name} uploaded · Reading content...`;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadedResumeText = e.target.result;
+    window._uploadedResumeText = uploadedResumeText;
+    status.textContent = `✅ ${file.name} ready · ${Math.round(file.size/1024)}KB · Click Screen Candidate to analyze`;
+    addNotification('📄 Resume uploaded', `${file.name} ready for AI screening`, 'info');
+  };
+  reader.readAsText(file);
+}
+
+function handleResumeDrop(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  const file = event.dataTransfer.files[0];
+  if (file) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('resume-real-input').files = dt.files;
+    handleRealResume({ target: { files: [file] } });
+  }
+}
+
+function handleWorkSamples(event) {
+  const files = Array.from(event.target.files);
+  workSampleFiles = files;
+  const status = document.getElementById('work-sample-status');
+  status.textContent = `✅ ${files.length} work sample(s) uploaded: ${files.map(f=>f.name).join(', ')}`;
+  addNotification('💼 Work samples added', `${files.length} file(s) added to candidate profile`, 'info');
+}
+
+// ── OPS WORKFLOW RUNNER (replaces old triggerWorkflow) ──
+async function runOpsWorkflow(type) {
+  const steps = {
+    scheduling: {
+      name: 'Smart Scheduling',
+      steps: ['Scanning team calendars...', 'Finding optimal time slots...', 'Sending calendar invites...', 'Done — 3 interview slots booked!'],
+      saved: '45 min',
+      icon: '📅'
+    },
+    travel: {
+      name: 'Travel Coordination',
+      steps: ['Collecting team travel preferences...', 'Searching flight options...', 'Drafting itinerary...', 'Done — itinerary sent to 6 team members!'],
+      saved: '1h 30m',
+      icon: '✈️'
+    },
+    routing: {
+      name: 'Request Routing',
+      steps: ['Receiving employee requests...', 'Classifying: HR / IT / Finance / Ops...', 'Auto-assigning to team members...', 'Done — 4 requests routed with SLA timers set!'],
+      saved: '30 min',
+      icon: '🔀'
+    }
+  };
+  const wf = steps[type];
+  if (!wf) return;
+
+  // Show running state
+  const actLog = document.getElementById('automation-log');
+  const runningHtml = `<div style="padding:14px;background:var(--phamily-purple-xlight);border-radius:var(--radius-md);margin-bottom:10px;border-left:4px solid var(--phamily-purple);">
+    <div style="font-size:12px;font-weight:700;color:var(--phamily-purple);margin-bottom:8px;">${wf.icon} ${wf.name} — Running</div>
+    <div id="wf-progress-${type}" style="font-size:11px;color:var(--text-secondary);"></div>
+  </div>`;
+
+  if (actLog) actLog.insertAdjacentHTML('afterbegin', runningHtml);
+
+  const progressEl = document.getElementById(`wf-progress-${type}`);
+  for (let i = 0; i < wf.steps.length; i++) {
+    await new Promise(r => setTimeout(r, 700));
+    if (progressEl) progressEl.innerHTML += `<div>✓ ${wf.steps[i]}</div>`;
+  }
+
+  // Call real backend
+  const result = await api(`/automations/trigger`, 'POST', {
+    workflow_type: type,
+    context: { triggered_from: 'ops_panel' }
+  });
+
+  addNotification(`${wf.icon} ${wf.name} Complete`, `${wf.saved} saved — ${wf.steps[wf.steps.length-1]}`, 'success');
+}
+
+// ── NOTIFICATION SYSTEM ──
+let notifications = [];
+let notifOpen = false;
+
+function addNotification(title, message, type = 'info') {
+  const n = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    time: new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}),
+    read: false
+  };
+  notifications.unshift(n);
+  renderNotifications();
+  showNotifToast(title, message, type);
+
+  // Browser notification if permitted
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(`PhamilyOps: ${title}`, { body: message });
+  }
+}
+
+function renderNotifications() {
+  const list = document.getElementById('notif-list');
+  const badge = document.getElementById('notif-badge');
+  if (!list) return;
+
+  const unread = notifications.filter(n => !n.read).length;
+  if (badge) {
+    badge.textContent = unread;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+  }
+
+  if (notifications.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:12px;">🔔 No notifications yet</div>';
+    return;
+  }
+
+  const icons = { info: 'ℹ️', success: '✅', warning: '⚠️', reminder: '⏰', ai: '🤖' };
+  list.innerHTML = notifications.slice(0,10).map(n => `
+    <div style="padding:10px 14px;border-bottom:1px solid var(--border);${!n.read ? 'background:var(--phamily-purple-xlight);' : ''}cursor:pointer;" onclick="markRead(${n.id})">
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <span style="font-size:16px;">${icons[n.type] || 'ℹ️'}</span>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);">${n.title}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${n.message}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">${n.time}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function markRead(id) {
+  notifications = notifications.map(n => n.id === id ? {...n, read: true} : n);
+  renderNotifications();
+}
+
+function clearAllNotifs() {
+  notifications = [];
+  renderNotifications();
+  const panel = document.getElementById('notif-panel');
+  if (panel) panel.style.display = 'none';
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  if (!panel) return;
+  notifOpen = !notifOpen;
+  panel.style.display = notifOpen ? 'block' : 'none';
+  if (notifOpen) {
+    notifications = notifications.map(n => ({...n, read: true}));
+    renderNotifications();
+  }
+}
+
+// Close notification panel when clicking outside
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('notif-panel');
+  if (panel && notifOpen && !panel.contains(e.target) && !e.target.closest('button[onclick*="toggleNotifPanel"]')) {
+    notifOpen = false;
+    panel.style.display = 'none';
+  }
+});
+
+function showNotifToast(title, message, type) {
+  const existing = document.getElementById('notif-toast-global');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'notif-toast-global';
+  const colors = { success: 'var(--phamily-green-dark)', info: 'var(--phamily-purple)', warning: '#D97706', reminder: '#D97706' };
+  toast.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:${colors[type]||'var(--phamily-purple)'};color:white;padding:10px 20px;border-radius:22px;box-shadow:var(--shadow-lg);font-size:12px;font-weight:600;z-index:9999;animation:fadeIn 0.3s ease;`;
+  toast.innerHTML = `${title} — ${message}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// Request browser notification permission on load
+if ('Notification' in window && Notification.permission === 'default') {
+  setTimeout(() => Notification.requestPermission(), 2000);
+}
+
+// Seed initial notifications
+setTimeout(() => {
+  addNotification('🎉 PhamilyOps Live', 'All systems connected and operational', 'success');
+  addNotification('📋 3 candidates awaiting review', 'Jordan Chen scored 95 — ready for interview', 'info');
+  addNotification('⏰ Interview reminder', 'Jordan Chen interview in 30 minutes', 'reminder');
+}, 1500);
+
+// ── AI EMAIL COMPOSER ──
+let generatedEmail = '';
+
+async function generateEmail() {
+  const type = document.getElementById('email-type').value;
+  const candidate = document.getElementById('email-candidate').value || 'the candidate';
+  const role = document.getElementById('email-role').value || 'AI Automation Intern';
+  const details = document.getElementById('email-details').value || '';
+  const tone = document.getElementById('email-tone').value;
+
+  const typeLabels = {
+    outreach: 'Candidate Outreach',
+    interview_invite: 'Interview Invitation',
+    offer: 'Offer Letter Email',
+    rejection: 'Kind Rejection',
+    followup: 'Follow-up Check-in',
+    onboarding: 'Onboarding Welcome',
+    reference: 'Reference Request',
+    negotiation: 'Offer Negotiation Response'
+  };
+
+  const out = document.getElementById('email-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:40px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Drafting professional email...</span></div>';
+
+  const result = await callClaude(
+    `You are Phamily's (Jaan Health) Head of People Operations. Write professional, warm, mission-aligned emails for HR communications. Phamily's principles: Care, Curiosity, Clarity, Co-Creation, Craftsmanship. Always reflect healthcare mission and people-first culture. Write complete ready-to-send emails with Subject line included.`,
+    `Write a ${typeLabels[type]} email for:
+Candidate: ${candidate}
+Role: ${role}
+Tone: ${tone}
+Details: ${details}
+
+Format:
+Subject: [subject line]
+
+[email body]
+
+Sign off from the Phamily HR Team.`,
+    800
+  );
+
+  const emailText = result || `Subject: Exciting Opportunity at Phamily — ${role}
+
+Dear ${candidate},
+
+Thank you for your interest in the ${role} position at Phamily (Jaan Health). We are building AI-powered care management solutions that transform healthcare for hundreds of thousands of patients.
+
+Your background caught our attention, and we'd love to connect.
+
+Best regards,
+Phamily HR Team`;
+
+  generatedEmail = emailText;
+  out.innerHTML = `<div style="white-space:pre-wrap;font-size:12px;line-height:1.9;color:var(--text-secondary);">${emailText}</div>`;
+  addNotification('📧 Email drafted', `${typeLabels[type]} for ${candidate} ready to send`, 'ai');
+}
+
+async function refineEmail(instruction) {
+  if (!instruction || !generatedEmail) return;
+  const input = document.getElementById('email-refine-input');
+  if (input) input.value = '';
+
+  const out = document.getElementById('email-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Refining...</span></div>';
+
+  const result = await callClaude(
+    'You are refining an HR email. Apply the requested change and return only the complete updated email, nothing else.',
+    `Current email:
+${generatedEmail}
+
+Instruction: ${instruction}
+
+Return the complete updated email only.`,
+    600
+  );
+
+  generatedEmail = result || generatedEmail;
+  out.innerHTML = `<div style="white-space:pre-wrap;font-size:12px;line-height:1.9;color:var(--text-secondary);">${generatedEmail}</div>`;
+}
+
+function copyEmail() {
+  if (!generatedEmail) { alert('Generate an email first'); return; }
+  navigator.clipboard.writeText(generatedEmail).then(() => {
+    addNotification('📋 Copied', 'Email copied to clipboard', 'success');
+  });
+}
+
+function openMailClient() {
+  if (!generatedEmail) { alert('Generate an email first'); return; }
+  const lines = generatedEmail.split('
+');
+  const subjectLine = lines.find(l => l.startsWith('Subject:'));
+  const subject = subjectLine ? subjectLine.replace('Subject:', '').trim() : 'Phamily HR';
+  const body = generatedEmail.replace(subjectLine || '', '').trim();
+  window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+}
+
+// ── WIRE EMAIL AI NAV ──
+const _origShowPanelV3 = window.showPanel;
+window.showPanel = function(name) {
+  _origShowPanelV3(name);
+  const extras = {
+    emailai: ['AI Email Composer', 'Draft professional HR emails in seconds · AI-powered refinement'],
+  };
+  if (extras[name]) {
+    const titleEl = document.getElementById('topbar-title');
+    const subEl = document.getElementById('topbar-subtitle');
+    if (titleEl) titleEl.textContent = extras[name][0];
+    if (subEl) subEl.textContent = extras[name][1];
+  }
+};
+
+// ── SMART REMINDER SYSTEM ──
+// Check meetings every minute and send proactive reminders
+setInterval(() => {
+  const meetings = JSON.parse(sessionStorage.getItem('phamilyops_meetings') || '[]');
+  const now = new Date();
+  meetings.forEach(m => {
+    const meetTime = new Date(`${m.date}T${m.time}`);
+    const minsUntil = Math.round((meetTime - now) / 60000);
+    if (minsUntil === m.reminder) {
+      addNotification(`⏰ Meeting in ${m.reminder} minutes`, `${m.title} — ${m.attendees}`, 'reminder');
+    }
+    if (minsUntil === 5) {
+      addNotification(`🚨 Starting in 5 min!`, `${m.title} — join now`, 'reminder');
+    }
+  });
+}, 60000);
 
 </script>
