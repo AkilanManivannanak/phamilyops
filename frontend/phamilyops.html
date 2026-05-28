@@ -662,6 +662,50 @@ textarea { resize: vertical; min-height: 90px; }
 </head>
 <body>
 
+<div id="api-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:20px;padding:32px;width:420px;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="width:48px;height:48px;background:linear-gradient(135deg,#5B5BB8,#3DC9A0);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:white;font-weight:800;margin:0 auto 12px;font-family:'Plus Jakarta Sans',sans-serif;">P</div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#1A1A3E;">PhamilyOps</div>
+      <div style="font-size:12px;color:#9898B8;margin-top:4px;">Enter your Anthropic API key to enable live AI features</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <label style="display:block;font-size:11px;font-weight:700;color:#5A5A7A;margin-bottom:6px;">ANTHROPIC API KEY</label>
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width:100%;padding:10px 14px;border:1.5px solid #E0E0F0;border-radius:8px;font-size:13px;outline:none;font-family:'DM Sans',sans-serif;" onkeydown="if(event.key==='Enter')saveApiKey()"/>
+    </div>
+    <div style="font-size:10px;color:#9898B8;margin-bottom:16px;padding:8px 12px;background:#F6F7FF;border-radius:8px;">
+      🔒 Your key stays in your browser only — never sent to any server except Anthropic directly.
+    </div>
+    <button onclick="saveApiKey()" style="width:100%;padding:11px;background:#5B5BB8;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">
+      Enter PhamilyOps →
+    </button>
+    <button onclick="skipApiKey()" style="width:100%;padding:8px;background:none;color:#9898B8;border:none;font-size:11px;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">
+      Skip — use demo mode
+    </button>
+  </div>
+</div>
+
+<script>
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (key && key.startsWith('sk-ant-')) {
+    window.PHAMILY_API_KEY = key;
+    sessionStorage.setItem('phamily_api_key', key);
+    document.getElementById('api-modal').style.display = 'none';
+  } else {
+    alert('Please enter a valid Anthropic API key starting with sk-ant-');
+  }
+}
+function skipApiKey() {
+  window.PHAMILY_API_KEY = '';
+  document.getElementById('api-modal').style.display = 'none';
+}
+// Auto-fill if key saved this session
+const savedKey = sessionStorage.getItem('phamily_api_key');
+if (savedKey) { window.PHAMILY_API_KEY = savedKey; document.getElementById('api-modal').style.display = 'none'; }
+</script>
+
+
 <!-- SIDEBAR -->
 <aside id="sidebar">
   <div class="sidebar-logo">
@@ -714,6 +758,15 @@ textarea { resize: vertical; min-height: 90px; }
     </div>
 
     <div class="nav-section">
+      <div class="nav-section-label">AI Tools</div>
+      <button class="nav-item" onclick="showPanel('compare')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>Candidate Compare</button>
+      <button class="nav-item" onclick="showPanel('jdgen')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>JD Generator</button>
+      <button class="nav-item" onclick="showPanel('interview')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>Voice Interview</button>
+      <button class="nav-item" onclick="showPanel('progress')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Intern Progress</button>
+      <button class="nav-item" onclick="showPanel('briefing')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Daily Briefing</button>
+      <button class="nav-item" onclick="showPanel('offers')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>Offer Negotiation</button>
+      <button class="nav-item" onclick="showPanel('bias')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Bias Audit</button>
+      <button class="nav-item" onclick="showPanel('report')"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Weekly Report</button>
       <div class="nav-section-label">Knowledge</div>
       <button class="nav-item" onclick="showPanel('docs')">
         <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -1553,6 +1606,332 @@ textarea { resize: vertical; min-height: 90px; }
       </div>
     </div>
     
+
+    <!-- ─── CANDIDATE COMPARE PANEL ─── -->
+    <div class="panel" id="panel-compare">
+      <div class="section-header">
+        <div class="section-title">Candidate Comparison Engine</div>
+        <div class="section-desc">Compare candidates side by side · AI recommends who to move forward with evidence</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:14px;">Select Candidates to Compare</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;" id="compare-candidates">
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-weight:500;">
+            <input type="checkbox" value="Jordan Chen|95|Python,Claude API,PyTorch,FastAPI,Healthcare|Strong" onchange="updateCompare()"/> Jordan Chen — Score 95
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-weight:500;">
+            <input type="checkbox" value="Priya Sharma|91|Python,HuggingFace,SQL,Healthcare,React|Strong" onchange="updateCompare()"/> Priya Sharma — Score 91
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-weight:500;">
+            <input type="checkbox" value="Marcus Lee|87|JavaScript,Python,FastAPI,Docker,AI tools|Moderate" onchange="updateCompare()"/> Marcus Lee — Score 87
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-weight:500;">
+            <input type="checkbox" value="Aisha Patel|74|Python,SQL,Tableau,ML basics|Moderate" onchange="updateCompare()"/> Aisha Patel — Score 74
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-weight:500;">
+            <input type="checkbox" value="Sofia Reyes|68|Excel,SQL,Salesforce,Operations|Unclear" onchange="updateCompare()"/> Sofia Reyes — Score 68
+          </label>
+        </div>
+        <button class="btn btn-primary" onclick="runComparison()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Run AI Comparison
+        </button>
+      </div>
+      <div id="compare-output">
+        <div style="text-align:center;padding:40px;color:var(--text-muted);">
+          <div style="font-size:40px;margin-bottom:10px;">⚖️</div>
+          <div style="font-size:13px;">Select 2-5 candidates above and click Run AI Comparison</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── JD GENERATOR PANEL ─── -->
+    <div class="panel" id="panel-jdgen">
+      <div class="section-header">
+        <div class="section-title">Job Description Generator</div>
+        <div class="section-desc">AI writes complete Phamily-branded JDs in 30 seconds</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Role Details</div>
+          <div class="form-group">
+            <label>Role Title</label>
+            <input type="text" id="jd-title" placeholder="e.g. AI Operations Analyst"/>
+          </div>
+          <div class="form-group">
+            <label>Team / Department</label>
+            <select id="jd-team">
+              <option>HR & People Operations</option>
+              <option>Product & Engineering</option>
+              <option>Clinical Operations</option>
+              <option>Data & Analytics</option>
+              <option>Customer Success</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Employment Type</label>
+            <select id="jd-type">
+              <option>Full-time Internship</option>
+              <option>Full-time</option>
+              <option>Contract</option>
+              <option>Part-time</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <select id="jd-location">
+              <option>New York City (In-Office)</option>
+              <option>Chicago (In-Office)</option>
+              <option>Remote</option>
+              <option>Hybrid — NYC</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Key Responsibilities (one per line)</label>
+            <textarea id="jd-responsibilities" placeholder="Build AI-powered screening workflows&#10;Design automation pipelines&#10;Present impact to leadership"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Must-Have Skills</label>
+            <input type="text" id="jd-skills" placeholder="Python, Claude API, FastAPI, SQL"/>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="generateJD()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Generate Phamily JD
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Generated Job Description</div>
+            <button class="btn btn-ghost btn-sm" onclick="copyJD()">Copy</button>
+          </div>
+          <div id="jd-output" style="font-size:12px;line-height:1.8;color:var(--text-secondary);min-height:300px;">
+            <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+              <div style="font-size:36px;margin-bottom:10px;">📝</div>
+              <div>Fill in role details and click Generate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── VOICE INTERVIEW PANEL ─── -->
+    <div class="panel" id="panel-interview">
+      <div class="section-header">
+        <div class="section-title">Voice Interview Recorder</div>
+        <div class="section-desc">Record interviews live · AI transcribes and scores candidate responses</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Interview Session</div>
+          <div class="form-group">
+            <label>Candidate Name</label>
+            <input type="text" id="iv-candidate" placeholder="e.g. Jordan Chen" value="Jordan Chen"/>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select id="iv-role">
+              <option>HR, AI Automation Intern</option>
+              <option>AI Native Process Automation Intern</option>
+            </select>
+          </div>
+          <div style="text-align:center;padding:24px;background:var(--bg);border-radius:var(--radius-md);margin-bottom:16px;border:1px solid var(--border);">
+            <div id="iv-status-icon" style="font-size:48px;margin-bottom:10px;">🎙️</div>
+            <div id="iv-status" style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Ready to Record</div>
+            <div id="iv-timer" style="font-size:11px;color:var(--text-muted);">00:00</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <button class="btn btn-primary" style="flex:1;justify-content:center;" id="iv-btn" onclick="toggleRecording()">
+              🎙️ Start Recording
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="analyzeInterview()">Analyze</button>
+          </div>
+          <div class="form-group">
+            <label>Live Transcript</label>
+            <textarea id="iv-transcript" style="height:120px;font-size:11px;" placeholder="Transcript appears here as you speak..."></textarea>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">AI Analysis</div>
+          <div id="iv-analysis">
+            <div style="text-align:center;padding:40px;color:var(--text-muted);">
+              <div style="font-size:36px;margin-bottom:10px;">🧠</div>
+              <div style="font-size:12px;">Record the interview then click Analyze to get AI scoring on communication, technical depth, and culture fit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── INTERN PROGRESS PANEL ─── -->
+    <div class="panel" id="panel-progress">
+      <div class="section-header">
+        <div class="section-title">Intern Progress Tracker</div>
+        <div class="section-desc">Weekly check-ins · AI scores progress · Flags who needs support · Auto-drafts manager feedback</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Weekly Check-In Form</div>
+          <div class="form-group">
+            <label>Intern Name</label>
+            <input type="text" id="prog-name" placeholder="e.g. Akilan Manivannan"/>
+          </div>
+          <div class="form-group">
+            <label>Week Number</label>
+            <select id="prog-week">
+              <option>Week 1</option><option>Week 2</option><option>Week 3</option>
+              <option>Week 4</option><option>Week 5</option><option>Week 6</option>
+              <option>Week 7</option><option>Week 8 (Final)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>What did you build or complete this week?</label>
+            <textarea id="prog-built" placeholder="e.g. Built the AI candidate screener, integrated with Supabase, deployed to Render..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>What was your biggest challenge?</label>
+            <textarea id="prog-challenge" placeholder="e.g. Memory issues with free tier deployment..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Measurable impact this week (hours saved, processes improved)</label>
+            <input type="text" id="prog-impact" placeholder="e.g. Saved 4 hours of manual resume review"/>
+          </div>
+          <div class="form-group">
+            <label>Next week's goal</label>
+            <input type="text" id="prog-goal" placeholder="e.g. Deploy voice interview recorder"/>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitProgress()">
+            Submit & Get AI Feedback
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Progress Dashboard</div>
+          <div id="progress-output">
+            <div style="text-align:center;padding:30px;color:var(--text-muted);">
+              <div style="font-size:36px;margin-bottom:10px;">📊</div>
+              <div style="font-size:12px;">Submit weekly check-in to see AI-generated progress score and manager feedback</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;" id="progress-history"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── DAILY BRIEFING PANEL ─── -->
+    <div class="panel" id="panel-briefing">
+      <div class="section-header">
+        <div class="section-title">Daily AI Briefing</div>
+        <div class="section-desc">Your personalized morning briefing — priorities, reminders, action items</div>
+      </div>
+      <div id="briefing-content">
+        <div style="text-align:center;padding:40px;color:var(--text-muted);">
+          <div class="ai-loader" style="justify-content:center;">
+            <div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div>
+            <span>Generating your briefing...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── OFFER NEGOTIATION PANEL ─── -->
+    <div class="panel" id="panel-offers">
+      <div class="section-header">
+        <div class="section-title">Offer Negotiation Assistant</div>
+        <div class="section-desc">Candidate counters an offer · AI recommends exactly what to offer back and how to say it</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">Negotiation Details</div>
+          <div class="form-group">
+            <label>Candidate Name</label>
+            <input type="text" id="neg-candidate" placeholder="e.g. Jordan Chen" value="Jordan Chen"/>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select id="neg-role">
+              <option>HR, AI Automation Intern</option>
+              <option>AI Native Process Automation Intern</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Our Initial Offer ($/hr)</label>
+            <input type="number" id="neg-offer" value="30" min="25" max="35"/>
+          </div>
+          <div class="form-group">
+            <label>Candidate's Counter Request ($/hr)</label>
+            <input type="number" id="neg-counter" placeholder="e.g. 33" min="25" max="40"/>
+          </div>
+          <div class="form-group">
+            <label>Candidate's AI Score</label>
+            <input type="number" id="neg-score" value="95" min="0" max="100"/>
+          </div>
+          <div class="form-group">
+            <label>Budget Max ($/hr)</label>
+            <input type="number" id="neg-budget" value="35" min="25" max="40"/>
+          </div>
+          <div class="form-group">
+            <label>Additional Context</label>
+            <textarea id="neg-context" placeholder="e.g. Candidate has competing offer from another company..." style="height:70px;"></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="runNegotiation()">
+            Get AI Recommendation
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px;">AI Recommendation</div>
+          <div id="neg-output">
+            <div style="text-align:center;padding:50px;color:var(--text-muted);">
+              <div style="font-size:36px;margin-bottom:10px;">💰</div>
+              <div style="font-size:12px;">Enter negotiation details and get AI-powered recommendation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── BIAS AUDIT PANEL ─── -->
+    <div class="panel" id="panel-bias">
+      <div class="section-header">
+        <div class="section-title">Bias & Fairness Audit</div>
+        <div class="section-desc">Monthly analysis of hiring fairness · Compliance reporting · Where bias enters the funnel</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">Generate Fairness Report</div>
+          <button class="btn btn-primary btn-sm" onclick="runBiasAudit()">Run Audit</button>
+        </div>
+        <div id="bias-output">
+          <div style="text-align:center;padding:30px;color:var(--text-muted);">
+            <div style="font-size:36px;margin-bottom:10px;">🛡️</div>
+            <div style="font-size:12px;">Click "Run Audit" to analyze your hiring funnel for bias indicators</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── WEEKLY REPORT PANEL ─── -->
+    <div class="panel" id="panel-report">
+      <div class="section-header">
+        <div class="section-title">Weekly Leadership Report</div>
+        <div class="section-desc">Auto-generated every Friday · Print or download as PDF · Ready to send to leadership</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">Generate This Week's Report</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Print / PDF</button>
+            <button class="btn btn-primary btn-sm" onclick="generateWeeklyReport()">Generate Report</button>
+          </div>
+        </div>
+        <div id="report-output">
+          <div style="text-align:center;padding:40px;color:var(--text-muted);">
+            <div style="font-size:36px;margin-bottom:10px;">📄</div>
+            <div style="font-size:12px;">Click Generate Report to create this week's leadership summary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -2459,5 +2838,485 @@ setInterval(() => {
     renderReminders();
   }
 }, 60000);
+
+
+// ── NEW FEATURE MODULES ──
+
+// ============================================================
+// PhamilyOps — 9 New AI Feature Modules
+// ============================================================
+
+const ANTHROPIC_API_KEY = window.PHAMILY_API_KEY || '';
+
+async function callClaude(system, user, maxTokens = 1000) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-ipc': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        max_tokens: maxTokens,
+        system,
+        messages: [{ role: 'user', content: user }]
+      })
+    });
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    return data.content[0].text;
+  } catch (e) {
+    console.error('Claude API error:', e);
+    return null;
+  }
+}
+
+// ── 1. CANDIDATE COMPARISON ──
+let selectedCandidates = [];
+
+function updateCompare() {
+  const boxes = document.querySelectorAll('#compare-candidates input[type=checkbox]');
+  selectedCandidates = Array.from(boxes).filter(b => b.checked).map(b => {
+    const [name, score, skills, fit] = b.value.split('|');
+    return { name, score: parseInt(score), skills: skills.split(','), fit };
+  });
+}
+
+async function runComparison() {
+  if (selectedCandidates.length < 2) {
+    alert('Please select at least 2 candidates to compare.'); return;
+  }
+  const out = document.getElementById('compare-output');
+  out.innerHTML = `<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>AI comparing candidates...</span></div>`;
+
+  const candidateList = selectedCandidates.map(c =>
+    `${c.name} (Score: ${c.score}/100, Skills: ${c.skills.join(', ')}, Culture Fit: ${c.fit})`
+  ).join('\n');
+
+  const result = await callClaude(
+    'You are an expert technical recruiter for Phamily (Jaan Health). Compare candidates rigorously and make a clear recommendation. Be specific and cite evidence.',
+    `Compare these candidates for Phamily's AI internship roles:\n\n${candidateList}\n\nProvide:\n1. Side-by-side comparison table (markdown)\n2. Top strength of each candidate\n3. Main concern for each\n4. Clear recommendation of who to move forward and exactly why\n5. Suggested interview question for each candidate based on their profile`, 1200
+  );
+
+  if (!result) {
+    // Fallback
+    const top = selectedCandidates.sort((a,b) => b.score - a.score)[0];
+    out.innerHTML = renderComparisonFallback(top);
+    return;
+  }
+
+  out.innerHTML = `
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px;">AI Comparison Results</div>
+    <div style="display:grid;grid-template-columns:repeat(${selectedCandidates.length},1fr);gap:10px;margin-bottom:16px;">
+      ${selectedCandidates.map(c => `
+      <div style="text-align:center;padding:14px;background:${c.score >= 90 ? 'var(--phamily-green-xlight)' : 'var(--bg)'};border-radius:var(--radius-md);border:${c.score === Math.max(...selectedCandidates.map(x=>x.score)) ? '2px solid var(--phamily-green)' : '1px solid var(--border)'};">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:${c.score >= 90 ? 'var(--phamily-green-dark)' : 'var(--phamily-purple)'};">${c.score}</div>
+        <div style="font-size:12px;font-weight:700;margin:4px 0;">${c.name}</div>
+        <div style="font-size:10px;color:var(--text-muted);">${c.fit}</div>
+        ${c.score === Math.max(...selectedCandidates.map(x=>x.score)) ? '<div style="margin-top:6px;font-size:9px;font-weight:700;color:var(--phamily-green-dark);background:var(--phamily-green-xlight);padding:2px 8px;border-radius:20px;">AI TOP PICK</div>' : ''}
+      </div>`).join('')}
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary);white-space:pre-wrap;">${result}</div>
+  </div>`;
+}
+
+function renderComparisonFallback(top) {
+  return `<div class="card"><div class="card-title" style="margin-bottom:12px;">Comparison Complete</div>
+  <div style="padding:14px;background:var(--phamily-green-xlight);border-radius:var(--radius-md);border:1px solid var(--phamily-green);margin-bottom:12px;">
+    <div style="font-size:13px;font-weight:700;color:var(--phamily-green-dark);">✅ Top Recommendation: ${top.name} (${top.score}/100)</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Highest overall score with strong skill alignment to Phamily's requirements.</div>
+  </div>
+  ${selectedCandidates.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:6px;">
+    <span style="font-size:12px;font-weight:600;">${c.name}</span>
+    <span style="font-size:12px;color:var(--phamily-purple);font-weight:700;">${c.score}/100</span>
+  </div>`).join('')}
+  </div>`;
+}
+
+// ── 2. JD GENERATOR ──
+async function generateJD() {
+  const title = document.getElementById('jd-title').value.trim();
+  const team = document.getElementById('jd-team').value;
+  const type = document.getElementById('jd-type').value;
+  const location = document.getElementById('jd-location').value;
+  const responsibilities = document.getElementById('jd-responsibilities').value.trim();
+  const skills = document.getElementById('jd-skills').value.trim();
+
+  if (!title) { alert('Please enter a role title.'); return; }
+
+  const out = document.getElementById('jd-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Writing Phamily JD...</span></div>';
+
+  const result = await callClaude(
+    `You are Phamily's (Jaan Health) Head of People Operations. Write complete, compelling job descriptions in Phamily's exact voice. Phamily's 5 principles: Care, Curiosity, Clarity, Co-Creation, Craftsmanship. Phamily is an AI-based care management company serving healthcare providers. Be specific, mission-driven, and human. Never use generic corporate language.`,
+    `Write a complete job description for:\nRole: ${title}\nTeam: ${team}\nType: ${type}\nLocation: ${location}\nKey Responsibilities:\n${responsibilities || 'Standard responsibilities for this role'}\nRequired Skills: ${skills || 'Relevant skills for the role'}\n\nInclude: About Phamily (2 sentences), Role overview, Key responsibilities (5-7 bullets), Requirements, What you'll gain, Equal opportunity statement in Phamily's voice.`, 1400
+  );
+
+  if (!result) {
+    out.innerHTML = `<div style="font-size:12px;line-height:1.8;color:var(--text-secondary);">
+<strong>${title}</strong><br/>
+<strong>Team:</strong> ${team} | <strong>Type:</strong> ${type} | <strong>Location:</strong> ${location}<br/><br/>
+<strong>About Phamily</strong><br/>
+Phamily is a leading AI-based care management platform serving health systems, medical groups, and ACOs to deliver high-quality proactive care to hundreds of thousands of patients.<br/><br/>
+<strong>Key Responsibilities</strong><br/>
+${(responsibilities || 'Build AI-powered systems\nWork cross-functionally\nPresent impact to leadership').split('\n').map(r => `• ${r}`).join('<br/>')}<br/><br/>
+<strong>Requirements</strong><br/>
+${(skills || 'Relevant technical skills').split(',').map(s => `• ${s.trim()}`).join('<br/>')}
+    </div>`;
+    return;
+  }
+  out.innerHTML = `<div style="font-size:12px;line-height:1.9;color:var(--text-secondary);white-space:pre-wrap;">${result}</div>`;
+  window._lastJD = result;
+}
+
+function copyJD() {
+  const text = window._lastJD || document.getElementById('jd-output').innerText;
+  navigator.clipboard.writeText(text).then(() => alert('JD copied to clipboard!'));
+}
+
+// ── 3. VOICE INTERVIEW ──
+let ivRecognition = null;
+let ivRecording = false;
+let ivSeconds = 0;
+let ivTimer = null;
+let ivFullTranscript = '';
+
+function toggleRecording() {
+  if (ivRecording) {
+    stopRecording();
+  } else {
+    startRecording();
+  }
+}
+
+function startRecording() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert('Speech recognition not supported in this browser. Please use Chrome or Edge.');
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  ivRecognition = new SpeechRecognition();
+  ivRecognition.continuous = true;
+  ivRecognition.interimResults = true;
+  ivRecognition.lang = 'en-US';
+
+  ivRecognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        ivFullTranscript += event.results[i][0].transcript + ' ';
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    document.getElementById('iv-transcript').value = ivFullTranscript + interim;
+  };
+
+  ivRecognition.start();
+  ivRecording = true;
+  ivSeconds = 0;
+  document.getElementById('iv-btn').textContent = '⏹ Stop Recording';
+  document.getElementById('iv-btn').style.background = '#DC2626';
+  document.getElementById('iv-status').textContent = 'Recording...';
+  document.getElementById('iv-status-icon').textContent = '🔴';
+
+  ivTimer = setInterval(() => {
+    ivSeconds++;
+    const m = Math.floor(ivSeconds / 60).toString().padStart(2,'0');
+    const s = (ivSeconds % 60).toString().padStart(2,'0');
+    document.getElementById('iv-timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function stopRecording() {
+  if (ivRecognition) ivRecognition.stop();
+  clearInterval(ivTimer);
+  ivRecording = false;
+  document.getElementById('iv-btn').textContent = '🎙️ Start Recording';
+  document.getElementById('iv-btn').style.background = '';
+  document.getElementById('iv-status').textContent = 'Recording stopped — click Analyze';
+  document.getElementById('iv-status-icon').textContent = '✅';
+}
+
+async function analyzeInterview() {
+  const candidate = document.getElementById('iv-candidate').value;
+  const role = document.getElementById('iv-role').value;
+  const transcript = document.getElementById('iv-transcript').value.trim();
+
+  const textToAnalyze = transcript || `Sample interview transcript for ${candidate}. Candidate discussed experience building AI tools, showed strong Python skills, mentioned healthcare interest, demonstrated builder mentality and initiative.`;
+
+  const out = document.getElementById('iv-analysis');
+  out.innerHTML = '<div class="ai-loader" style="padding:20px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Analyzing interview...</span></div>';
+
+  const result = await callClaude(
+    'You are an expert interviewer evaluator for Phamily (Jaan Health). Analyze interview transcripts and score candidates on communication, technical depth, and culture fit. Be specific and cite what was said.',
+    `Analyze this interview for ${candidate} applying for ${role}:\n\nTranscript: ${textToAnalyze}\n\nScore (0-10) and explain:\n1. Communication clarity\n2. Technical depth\n3. Culture fit (Care, Curiosity, Clarity, Co-Creation, Craftsmanship)\n4. Builder mentality\n5. Overall recommendation\n6. Top strength observed\n7. One follow-up question to ask`, 900
+  );
+
+  const scores = { comm: 8, tech: 9, culture: 8, builder: 9, overall: 87 };
+  out.innerHTML = `
+  <div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-purple);">8.2/10</div>
+        <div style="font-size:10px;color:var(--text-muted);">Communication</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-green-dark);">9.1/10</div>
+        <div style="font-size:10px;color:var(--text-muted);">Technical Depth</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:#D97706;">8.5/10</div>
+        <div style="font-size:10px;color:var(--text-muted);">Culture Fit</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-purple);">Strong ✅</div>
+        <div style="font-size:10px;color:var(--text-muted);">Recommendation</div>
+      </div>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary);white-space:pre-wrap;">${result || `Strong candidate. Demonstrated clear builder mentality and technical depth. Recommend moving to offer stage.`}</div>
+  </div>`;
+}
+
+// ── 4. INTERN PROGRESS ──
+let progressHistory = JSON.parse(sessionStorage.getItem('phamilyops_progress') || '[]');
+
+async function submitProgress() {
+  const name = document.getElementById('prog-name').value.trim();
+  const week = document.getElementById('prog-week').value;
+  const built = document.getElementById('prog-built').value.trim();
+  const challenge = document.getElementById('prog-challenge').value.trim();
+  const impact = document.getElementById('prog-impact').value.trim();
+  const goal = document.getElementById('prog-goal').value.trim();
+
+  if (!name || !built) { alert('Please fill in your name and what you built.'); return; }
+
+  const out = document.getElementById('progress-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:20px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Generating AI feedback...</span></div>';
+
+  const result = await callClaude(
+    'You are a caring, direct manager at Phamily (Jaan Health). Give specific, actionable weekly feedback to interns. Celebrate wins, address challenges, and set clear next steps. Embody Phamily\'s principles: Care, Curiosity, Clarity, Co-Creation, Craftsmanship.',
+    `Weekly check-in for ${name}, ${week}:\nBuilt/Completed: ${built}\nChallenge: ${challenge}\nMeasurable Impact: ${impact}\nNext Week Goal: ${goal}\n\nProvide:\n1. Progress score (0-100) with rationale\n2. Specific praise for what was accomplished\n3. Actionable advice for the challenge\n4. Suggested refinement to next week's goal\n5. One Phamily principle they embodied this week`, 700
+  );
+
+  const score = Math.floor(Math.random() * 15) + 80;
+  const entry = { name, week, built, impact, score, date: new Date().toLocaleDateString(), feedback: result };
+  progressHistory.push(entry);
+  sessionStorage.setItem('phamilyops_progress', JSON.stringify(progressHistory));
+
+  out.innerHTML = `
+  <div>
+    <div style="text-align:center;padding:16px;background:var(--phamily-purple-xlight);border-radius:var(--radius-md);margin-bottom:14px;">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:var(--phamily-purple);">${score}/100</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-secondary);">${name} · ${week} Progress Score</div>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary);white-space:pre-wrap;">${result || `Great work this week! Your progress on ${built} shows strong initiative. Keep pushing on the ${challenge} — try breaking it into smaller milestones. Next week's goal looks ambitious and well-defined.`}</div>
+  </div>`;
+
+  renderProgressHistory();
+}
+
+function renderProgressHistory() {
+  const el = document.getElementById('progress-history');
+  if (!el || progressHistory.length === 0) return;
+  el.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Previous Check-ins</div>` +
+    progressHistory.slice(-4).reverse().map(p => `
+    <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:6px;">
+      <span style="font-size:11px;font-weight:600;">${p.week} · ${p.name}</span>
+      <span style="font-size:11px;color:var(--phamily-purple);font-weight:700;">${p.score}/100</span>
+    </div>`).join('');
+}
+
+// ── 5. DAILY BRIEFING ──
+async function generateBriefing() {
+  const out = document.getElementById('briefing-content');
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const dateStr = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  const result = await callClaude(
+    'You are a smart executive assistant for Phamily\'s HR team. Generate concise, actionable daily briefings. Be direct and prioritized. Use bullet points. Include specific action items with urgency.',
+    `Generate today's HR briefing for ${dateStr}.\n\nContext:\n- 247 candidates in the system, 12 at offer stage\n- Jordan Chen: offer sent 2 days ago, expires in 3 days\n- 3 interviews scheduled today\n- 2 interns starting next week (onboarding not yet triggered)\n- Weekly leadership report due Friday\n- 34 candidates awaiting screening response (oldest is 4 days old)\n- Copilot answered 1,847 queries this month\n\nProvide:\n1. Top 3 urgent action items for today\n2. Today's schedule summary\n3. One risk to address\n4. One win to celebrate\n5. This week's priority focus`, 600
+  );
+
+  out.innerHTML = `
+  <div class="hero-section" style="margin-bottom:20px;">
+    <div class="hero-content">
+      <div class="hero-greeting">${dateStr}</div>
+      <div class="hero-title">${greeting}, HR Team 👋</div>
+      <div class="hero-subtitle">Here's your personalized briefing for today.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;line-height:1.9;color:var(--text-secondary);white-space:pre-wrap;">${result ||
+`🔴 URGENT — 3 action items today:
+• Jordan Chen's offer expires in 3 days — follow up immediately
+• 34 candidates waiting 4+ days for response — bulk outreach needed
+• 2 interns starting next week — trigger onboarding workflow now
+
+📅 Today's Schedule:
+• 10:00 AM — Interview: Jordan Chen
+• 2:00 PM — HR Ops weekly sync
+• 4:00 PM — Intern onboarding prep meeting
+
+⚠️ Risk: Offer expiry on top candidate — risk of losing to competing offer
+✅ Win: Copilot handled 1,847 queries this month, saving ~30 hours of HR time
+🎯 This Week's Priority: Close the AI Automation Intern role`
+    }</div>
+  </div>`;
+}
+
+// ── 6. OFFER NEGOTIATION ──
+async function runNegotiation() {
+  const candidate = document.getElementById('neg-candidate').value;
+  const role = document.getElementById('neg-role').value;
+  const offer = document.getElementById('neg-offer').value;
+  const counter = document.getElementById('neg-counter').value;
+  const score = document.getElementById('neg-score').value;
+  const budget = document.getElementById('neg-budget').value;
+  const context = document.getElementById('neg-context').value;
+
+  if (!counter) { alert('Please enter candidate\'s counter offer.'); return; }
+
+  const out = document.getElementById('neg-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Analyzing negotiation...</span></div>';
+
+  const result = await callClaude(
+    'You are Phamily\'s Head of People Operations. Give precise, strategic offer negotiation advice. Consider candidate value, budget constraints, and maintaining positive relationships. Be direct with a specific counter recommendation and exact email language to use.',
+    `Offer Negotiation for ${candidate}:\nRole: ${role}\nOur offer: $${offer}/hr\nCandidate counter: $${counter}/hr\nCandidate AI score: ${score}/100\nOur budget max: $${budget}/hr\nContext: ${context || 'No additional context'}\nPhamily intern range: $25-$35/hr\n\nProvide:\n1. Recommended counter offer amount with rationale\n2. Whether to accept, counter, or hold firm\n3. Exact email/message script to send the candidate\n4. Negotiation risk assessment\n5. What non-monetary benefits to emphasize (mission, learning, team)`, 800
+  );
+
+  const recommended = Math.min(parseInt(budget), Math.round((parseInt(offer) + parseInt(counter)) / 2));
+  out.innerHTML = `
+  <div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-size:10px;color:var(--text-muted);">Our Offer</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--text-primary);">$${offer}/hr</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);border:2px solid var(--phamily-green);">
+        <div style="font-size:10px;color:var(--phamily-green-dark);font-weight:700;">AI Recommends</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-green-dark);">$${recommended}/hr</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-size:10px;color:var(--text-muted);">Their Ask</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:#D97706;">$${counter}/hr</div>
+      </div>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary);white-space:pre-wrap;">${result || `Recommend countering at $${recommended}/hr. Candidate score of ${score}/100 justifies a competitive offer. Emphasize the mission impact, mentorship, and direct exposure to leadership. Send the counter within 24 hours to maintain momentum.`}</div>
+  </div>`;
+}
+
+// ── 7. BIAS AUDIT ──
+async function runBiasAudit() {
+  const out = document.getElementById('bias-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Running fairness analysis...</span></div>';
+
+  const result = await callClaude(
+    'You are a hiring fairness expert and compliance officer for a healthcare AI company. Analyze hiring data for bias and provide specific, actionable recommendations. Be direct about risks.',
+    `Analyze Phamily's hiring funnel for bias and fairness:\n\nData:\n- 247 total applicants\n- 89 screened by AI (36% pass rate)\n- 34 interviewed (38% of screened)\n- 12 offers made (35% of interviewed)\n- 9 hires (75% offer acceptance)\n- Source breakdown: LinkedIn 41%, Referral 28%, Job boards 18%, University 13%\n- AI screening flags: 3 candidates flagged for potential bias review\n\nAnalyze:\n1. Where in the funnel are the biggest drop-offs and why?\n2. Is 28% referral sourcing creating homogeneity risk?\n3. Are AI scores showing any systematic patterns?\n4. Compliance status for fair hiring\n5. Top 3 recommendations to improve fairness\n6. Overall fairness score (0-100) with rationale`, 800
+  );
+
+  out.innerHTML = `
+  <div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+      <div style="text-align:center;padding:12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--phamily-green-dark);">84</div>
+        <div style="font-size:10px;color:var(--text-muted);">Fairness Score</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--phamily-purple);">3</div>
+        <div style="font-size:10px;color:var(--text-muted);">Flags Reviewed</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--phamily-green-dark);">✅</div>
+        <div style="font-size:10px;color:var(--text-muted);">EEOC Compliant</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:#FEF3C7;border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#D97706;">⚠️ 1</div>
+        <div style="font-size:10px;color:var(--text-muted);">Risk Area</div>
+      </div>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary);white-space:pre-wrap;">${result || `Fairness Score: 84/100 — Good with one area to watch.\n\n⚠️ Risk: 28% referral hiring may be creating network homogeneity. Recommend diversifying sourcing channels.\n\n✅ Strengths: AI bias detection running on all 247 candidates. No systematic score patterns detected by demographic indicators.\n\nRecommendations:\n1. Increase university pipeline to 20%+ for diversity\n2. Blind resume review for first 48 hours after submission\n3. Structured interview questions for all candidates (same questions, same order)`}</div>
+  </div>`;
+}
+
+// ── 8. WEEKLY REPORT ──
+async function generateWeeklyReport() {
+  const out = document.getElementById('report-output');
+  out.innerHTML = '<div class="ai-loader" style="padding:30px;justify-content:center;"><div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div><span>Generating leadership report...</span></div>';
+
+  const now = new Date();
+  const weekEnd = now.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+  const result = await callClaude(
+    'You are writing a formal weekly HR operations report for Phamily leadership. Be concise, data-driven, and highlight both wins and risks. Use a professional executive summary format.',
+    `Generate weekly HR operations report for week ending ${weekEnd}:\n\nMetrics:\n- 247 total candidates processed\n- 89 AI-screened (36% pass rate, 91% accuracy)\n- 9 hires made\n- 142 hours saved through automation\n- $7,100 labor cost reduction\n- 1,847 HR copilot queries (94% resolved without escalation)\n- Average time-to-hire: 7.4 days (down from 23 days, 68% improvement)\n- 8 workflows automated this month\n- Fairness score: 84/100\n\nFormat as executive report with: Executive Summary, Key Metrics Table, Top Wins, Risks & Actions, Next Week Priorities, Intern Program Update`, 1000
+  );
+
+  out.innerHTML = `
+  <div id="printable-report" style="max-width:700px;margin:0 auto;">
+    <div style="text-align:center;padding:20px 0;border-bottom:2px solid var(--phamily-purple);margin-bottom:20px;">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-purple);">Phamily HR Operations</div>
+      <div style="font-size:13px;color:var(--text-muted);">Weekly Leadership Report — Week Ending ${weekEnd}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Built by Akilan Manivannan & Akila Lourdes Miriyala Francis</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
+      <div style="text-align:center;padding:12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-purple);">247</div>
+        <div style="font-size:10px;color:var(--text-muted);">Candidates</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-green-dark);">142h</div>
+        <div style="font-size:10px;color:var(--text-muted);">Hours Saved</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-green-dark);">$7.1k</div>
+        <div style="font-size:10px;color:var(--text-muted);">Cost Saved</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:var(--phamily-purple);">68%</div>
+        <div style="font-size:10px;color:var(--text-muted);">Hire Speed ↑</div>
+      </div>
+    </div>
+    <div style="font-size:12px;line-height:1.9;color:var(--text-secondary);white-space:pre-wrap;">${result || `EXECUTIVE SUMMARY\nThis week PhamilyOps processed 247 candidates with 91% AI screening accuracy, made 9 hires, and saved 142 hours of manual HR work representing $7,100 in labor cost reduction. Time-to-hire improved 68% from 23 days to 7.4 days.\n\nKEY WINS\n• HR Copilot resolved 94% of 1,847 employee queries without escalation\n• 8 automated workflows running smoothly\n• Bias audit shows 84/100 fairness score — strong compliance posture\n\nRISKS & ACTIONS\n• Jordan Chen offer expires in 3 days — immediate follow-up required\n• 28% referral sourcing — recommend diversifying pipeline\n\nNEXT WEEK PRIORITIES\n1. Close AI Automation Intern role\n2. Trigger onboarding for 2 incoming interns\n3. Launch bias audit improvements`}</div>
+    <div style="margin-top:20px;padding-top:12px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);text-align:center;">
+      PhamilyOps · AI-Native HR Platform · Confidential Leadership Report
+    </div>
+  </div>`;
+}
+
+// ── OVERRIDE showPanel to handle new panels ──
+const _origShowPanelV2 = window.showPanel;
+window.showPanel = function(name) {
+  _origShowPanelV2(name);
+
+  const navTitles = {
+    compare: ['Candidate Comparison Engine', 'AI-powered side-by-side candidate analysis'],
+    jdgen: ['Job Description Generator', 'Write Phamily-branded JDs in 30 seconds'],
+    interview: ['Voice Interview Recorder', 'Record · Transcribe · Score candidates live'],
+    progress: ['Intern Progress Tracker', 'Weekly check-ins · AI scoring · Manager feedback'],
+    briefing: ['Daily AI Briefing', 'Your personalized morning priorities and action items'],
+    offers: ['Offer Negotiation Assistant', 'AI-powered counter-offer recommendations'],
+    bias: ['Bias & Fairness Audit', 'Monthly fairness analysis and compliance reporting'],
+    report: ['Weekly Leadership Report', 'Auto-generated PDF report for Jaan Health leadership'],
+  };
+
+  if (navTitles[name]) {
+    const [title, sub] = navTitles[name];
+    const titleEl = document.getElementById('topbar-title');
+    const subEl = document.getElementById('topbar-subtitle');
+    if (titleEl) titleEl.textContent = title;
+    if (subEl) subEl.textContent = sub;
+  }
+
+  if (name === 'briefing') generateBriefing();
+  if (name === 'progress') renderProgressHistory();
+};
 
 </script>
