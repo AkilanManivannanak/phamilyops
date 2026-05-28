@@ -757,7 +757,7 @@ textarea { resize: vertical; min-height: 90px; }
 
       <div class="hero-section">
         <div class="hero-content">
-          <div class="hero-greeting">Good morning, HR Team 👋</div>
+          <div class="hero-greeting" id="dynamic-greeting">Good morning, HR Team 👋</div>
           <div class="hero-title">Your AI-Powered HR & Ops Platform is Live</div>
           <div class="hero-subtitle">Built exclusively for Phamily — automating the human side of healthcare hiring so your team focuses on what matters most: people and patients.</div>
           <div class="hero-chips">
@@ -1973,6 +1973,25 @@ async function loadAnalytics() {
 
 // ── SESSION ID for chat ──
 window._sessionId = 'session_' + Math.random().toString(36).slice(2);
+
+function setDynamicGreeting() {
+  const now = new Date();
+  const hour = now.getHours();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const day = days[now.getDay()];
+  const date = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  let greeting;
+  if (hour >= 5 && hour < 12) greeting = 'Good morning';
+  else if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
+  else if (hour >= 17 && hour < 21) greeting = 'Good evening';
+  else greeting = 'Working late';
+  const el = document.getElementById('dynamic-greeting');
+  if (el) el.textContent = greeting + ', HR Team 👋 — ' + day + ', ' + month + ' ' + date + ', ' + year;
+}
+setDynamicGreeting();
 
 // ── Init on load ──
 document.addEventListener('DOMContentLoaded', () => {
