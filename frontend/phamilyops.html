@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PhamilyOps — AI-Native HR & Operations Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --phamily-purple: #5B5BB8;
+  --phamily-purple-light: #7B7BD4;
+  --phamily-purple-dark: #3D3D8A;
+  --phamily-purple-xlight: #EEEEFF;
+  --phamily-green: #3DC9A0;
+  --phamily-green-light: #5DDBB5;
+  --phamily-green-dark: #2AA880;
+  --phamily-green-xlight: #E8FAF5;
+  --white: #FFFFFF;
+  --bg: #F6F7FF;
+  --bg2: #EEEEFF;
+  --text-primary: #1A1A3E;
+  --text-secondary: #5A5A7A;
+  --text-muted: #9898B8;
+  --border: #E0E0F0;
+  --shadow-sm: 0 2px 8px rgba(91,91,184,0.08);
+  --shadow-md: 0 8px 32px rgba(91,91,184,0.12);
+  --shadow-lg: 0 24px 64px rgba(91,91,184,0.16);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── SIDEBAR ─── */
+#sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 240px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--phamily-purple), var(--phamily-green));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white; font-weight: 800;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  flex-shrink: 0;
+}
+
+.logo-text { line-height: 1.1; }
+.logo-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--phamily-purple);
+  letter-spacing: -0.3px;
+}
+.logo-sub { font-size: 10px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; }
+
+nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
+
+.nav-section { margin-bottom: 8px; }
+.nav-section-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--text-muted); padding: 10px 10px 6px; font-weight: 600;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.18s ease;
+  margin-bottom: 2px; border: none; background: none;
+  width: 100%; text-align: left; color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+}
+.nav-item:hover { background: var(--bg); color: var(--phamily-purple); }
+.nav-item.active {
+  background: var(--phamily-purple-xlight);
+  color: var(--phamily-purple);
+  font-weight: 600;
+}
+.nav-item.active .nav-icon { color: var(--phamily-purple); }
+
+.nav-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto; background: var(--phamily-green);
+  color: white; font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 20px;
+}
+
+.sidebar-footer {
+  padding: 16px; border-top: 1px solid var(--border);
+}
+.built-by {
+  font-size: 9.5px; color: var(--text-muted);
+  line-height: 1.5; text-align: center;
+}
+.built-by strong { color: var(--phamily-purple); font-weight: 600; }
+
+/* ─── MAIN CONTENT ─── */
+#main {
+  margin-left: 240px;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ─── TOP BAR ─── */
+#topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.page-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px; font-weight: 700; color: var(--text-primary);
+}
+.page-subtitle { font-size: 12px; color: var(--text-muted); }
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--phamily-green-xlight);
+  color: var(--phamily-green-dark);
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--phamily-green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
+
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--phamily-purple), var(--phamily-green));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 12px; font-weight: 700;
+  cursor: pointer;
+}
+
+/* ─── CONTENT AREA ─── */
+#content { flex: 1; padding: 28px 32px; }
+
+/* ─── PANELS ─── */
+.panel { display: none; animation: fadeIn 0.25s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+}
+
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 700; color: var(--text-primary);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title svg { color: var(--phamily-purple); }
+
+/* ─── DASHBOARD ─── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative; overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.stat-card.purple::before { background: var(--phamily-purple); }
+.stat-card.green::before { background: var(--phamily-green); }
+.stat-card.orange::before { background: #F59E0B; }
+.stat-card.blue::before { background: #3B82F6; }
+
+.stat-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px; font-size: 18px;
+}
+.stat-icon.purple { background: var(--phamily-purple-xlight); color: var(--phamily-purple); }
+.stat-icon.green { background: var(--phamily-green-xlight); color: var(--phamily-green-dark); }
+.stat-icon.orange { background: #FEF3C7; color: #D97706; }
+.stat-icon.blue { background: #EFF6FF; color: #2563EB; }
+
+.stat-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px; font-weight: 800; color: var(--text-primary);
+  line-height: 1; margin-bottom: 4px;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.stat-change { font-size: 11px; color: var(--phamily-green-dark); font-weight: 600; margin-top: 8px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+/* ─── FUNNEL ─── */
+.funnel-container { display: flex; align-items: center; gap: 4px; padding: 8px 0; }
+.funnel-stage {
+  flex: 1; text-align: center;
+}
+.funnel-bar {
+  border-radius: 6px; margin: 0 auto 6px;
+  transition: all 0.3s ease;
+}
+.funnel-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; color: var(--text-primary); }
+.funnel-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+.funnel-arrow { color: var(--border); font-size: 18px; flex-shrink: 0; }
+.funnel-pct { font-size: 10px; color: var(--phamily-purple); font-weight: 600; }
+
+/* ─── CANDIDATE TABLE ─── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); }
+th {
+  padding: 10px 14px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text-muted); font-weight: 600;
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+
+.score-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+}
+.score-badge.high { background: var(--phamily-green-xlight); color: var(--phamily-green-dark); }
+.score-badge.mid { background: #FEF3C7; color: #D97706; }
+.score-badge.low { background: #FEE2E2; color: #DC2626; }
+
+.status-tag {
+  display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.tag-screen { background: var(--phamily-purple-xlight); color: var(--phamily-purple); }
+.tag-interview { background: #EFF6FF; color: #2563EB; }
+.tag-offer { background: var(--phamily-green-xlight); color: var(--phamily-green-dark); }
+.tag-review { background: #FEF3C7; color: #D97706; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; transition: all 0.18s ease; font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--phamily-purple); color: white;
+}
+.btn-primary:hover { background: var(--phamily-purple-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(91,91,184,0.3); }
+.btn-green { background: var(--phamily-green); color: white; }
+.btn-green:hover { background: var(--phamily-green-dark); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent; color: var(--phamily-purple);
+  border: 1.5px solid var(--phamily-purple);
+}
+.btn-outline:hover { background: var(--phamily-purple-xlight); }
+.btn-ghost { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg2); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 12px 24px; font-size: 14px; }
+
+/* ─── FORM ELEMENTS ─── */
+.form-group { margin-bottom: 16px; }
+label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+
+input[type=text], input[type=email], input[type=number], textarea, select {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  color: var(--text-primary); background: var(--white);
+  transition: border-color 0.18s; outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--phamily-purple); }
+textarea { resize: vertical; min-height: 90px; }
+
+.range-input { width: 100%; accent-color: var(--phamily-purple); }
+
+/* ─── UPLOAD ZONE ─── */
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius-md);
+  padding: 32px; text-align: center; cursor: pointer;
+  transition: all 0.2s ease; background: var(--bg);
+}
+.upload-zone:hover { border-color: var(--phamily-purple); background: var(--phamily-purple-xlight); }
+.upload-zone.dragover { border-color: var(--phamily-green); background: var(--phamily-green-xlight); }
+.upload-icon { font-size: 36px; margin-bottom: 10px; }
+.upload-text { font-size: 13px; color: var(--text-muted); }
+.upload-text strong { color: var(--phamily-purple); }
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar-wrap {
+  background: var(--bg2); border-radius: 20px; height: 8px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 20px;
+  background: linear-gradient(90deg, var(--phamily-purple), var(--phamily-green));
+  transition: width 0.6s ease;
+}
+
+/* ─── CHAT ─── */
+.chat-container {
+  display: flex; flex-direction: column; height: 520px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; background: var(--white);
+}
+.chat-header {
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--phamily-purple), var(--phamily-purple-light));
+  display: flex; align-items: center; gap: 10px;
+}
+.chat-header-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 16px;
+}
+.chat-header-text { color: white; }
+.chat-header-name { font-size: 13px; font-weight: 700; }
+.chat-header-status { font-size: 10px; opacity: 0.8; }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--bg);
+}
+
+.msg { display: flex; gap: 10px; max-width: 82%; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.msg.bot .msg-avatar { background: linear-gradient(135deg, var(--phamily-purple), var(--phamily-green)); color: white; }
+.msg.user .msg-avatar { background: var(--phamily-purple-xlight); color: var(--phamily-purple); }
+
+.msg-bubble {
+  padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.55;
+}
+.msg.bot .msg-bubble {
+  background: var(--white); color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.msg.user .msg-bubble {
+  background: var(--phamily-purple); color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-input-row {
+  padding: 12px 14px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; background: var(--white);
+}
+.chat-input {
+  flex: 1; padding: 9px 14px; border: 1.5px solid var(--border);
+  border-radius: 22px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+  outline: none; transition: border-color 0.18s;
+}
+.chat-input:focus { border-color: var(--phamily-purple); }
+
+.chat-send-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: var(--phamily-purple); color: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; flex-shrink: 0;
+}
+.chat-send-btn:hover { background: var(--phamily-purple-dark); transform: scale(1.05); }
+
+.typing-dots span {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--phamily-purple); margin: 0 2px;
+  animation: typingDot 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingDot { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+
+/* ─── AUDIT SLIDERS ─── */
+.audit-item {
+  background: var(--bg); border-radius: var(--radius-md);
+  padding: 16px; margin-bottom: 12px; border: 1px solid var(--border);
+}
+.audit-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.audit-item-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.audit-item-score {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 800; color: var(--phamily-purple);
+}
+.audit-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.audit-metric label { font-size: 10px; color: var(--text-muted); }
+
+/* ─── ROADMAP ─── */
+.roadmap-item {
+  display: flex; gap: 16px; padding: 14px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-md); margin-bottom: 10px;
+  transition: all 0.2s; cursor: pointer;
+}
+.roadmap-item:hover { border-color: var(--phamily-purple); box-shadow: var(--shadow-sm); }
+.roadmap-rank {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--phamily-purple), var(--phamily-green));
+  color: white; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.roadmap-content { flex: 1; }
+.roadmap-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.roadmap-meta { display: flex; gap: 12px; }
+.roadmap-tag {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+}
+.roadmap-roi { color: var(--phamily-green-dark); background: var(--phamily-green-xlight); }
+.roadmap-time { color: var(--phamily-purple); background: var(--phamily-purple-xlight); }
+.roadmap-score {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px; font-weight: 800; color: var(--phamily-purple);
+  align-self: center;
+}
+
+/* ─── WORKFLOW ─── */
+.workflow-step {
+  display: flex; align-items: stretch; gap: 0; margin-bottom: 0;
+}
+.workflow-node {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 16px;
+  flex: 1; transition: all 0.2s;
+}
+.workflow-node:hover { border-color: var(--phamily-purple); box-shadow: var(--shadow-sm); }
+.workflow-node.active { border-color: var(--phamily-green); background: var(--phamily-green-xlight); }
+.workflow-connector {
+  display: flex; align-items: center; padding: 0 8px;
+  color: var(--phamily-purple); font-size: 18px; font-weight: 300;
+}
+.wf-icon { font-size: 20px; margin-bottom: 6px; }
+.wf-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.wf-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── DOCS ─── */
+.doc-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px;
+  margin-bottom: 10px; display: flex; gap: 14px; align-items: flex-start;
+  transition: all 0.2s; cursor: pointer;
+}
+.doc-card:hover { border-color: var(--phamily-purple); box-shadow: var(--shadow-sm); }
+.doc-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.doc-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+.doc-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.doc-meta { display: flex; gap: 8px; margin-top: 8px; }
+.doc-tag { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+
+/* ─── 3D HERO SECTION ─── */
+.hero-section {
+  background: linear-gradient(135deg, var(--phamily-purple) 0%, #4A4AB0 40%, #2D8A7A 100%);
+  border-radius: var(--radius-xl);
+  padding: 40px; color: white; margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.hero-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(61,201,160,0.25) 0%, transparent 60%),
+              radial-gradient(circle at 10% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+}
+.hero-section::after {
+  content: '';
+  position: absolute; right: -20px; top: -20px;
+  width: 200px; height: 200px;
+  border: 40px solid rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-greeting { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.hero-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26px; font-weight: 800; margin-bottom: 8px; line-height: 1.2;
+}
+.hero-subtitle { font-size: 13px; opacity: 0.8; margin-bottom: 20px; line-height: 1.6; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-chip {
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  color: white; font-size: 11px; font-weight: 600;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ─── SVG CHARTS ─── */
+.mini-chart { width: 100%; height: 80px; }
+
+/* ─── SECTION HEADERS ─── */
+.section-header { margin-bottom: 20px; }
+.section-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px; font-weight: 800; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.section-desc { font-size: 13px; color: var(--text-muted); }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ''; position: absolute; left: 9px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 16px; }
+.timeline-dot {
+  position: absolute; left: -23px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--white); box-shadow: 0 0 0 2px var(--phamily-purple);
+  background: var(--phamily-purple);
+}
+.timeline-dot.green { box-shadow: 0 0 0 2px var(--phamily-green); background: var(--phamily-green); }
+.timeline-dot.orange { box-shadow: 0 0 0 2px #F59E0B; background: #F59E0B; }
+.timeline-content { font-size: 12px; }
+.timeline-time { color: var(--text-muted); font-size: 10px; }
+.timeline-event { font-weight: 500; color: var(--text-primary); }
+
+/* ─── QUICK ACTIONS ─── */
+.quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.quick-action {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px; text-align: center;
+  cursor: pointer; transition: all 0.2s; border: none; width: 100%;
+  font-family: 'DM Sans', sans-serif;
+}
+.quick-action:hover { border-color: var(--phamily-purple); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.qa-icon { font-size: 24px; margin-bottom: 8px; }
+.qa-label { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.qa-desc { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+/* ─── SCREENING RESULT ─── */
+.screening-result {
+  background: var(--white); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.screening-result-header {
+  background: linear-gradient(135deg, var(--phamily-purple-xlight), var(--phamily-green-xlight));
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 16px; align-items: center;
+}
+.candidate-score-ring {
+  width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
+  background: conic-gradient(var(--phamily-purple) calc(var(--pct,82) * 1%), var(--border) 0);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.candidate-score-ring::after {
+  content: ''; position: absolute; inset: 8px;
+  background: white; border-radius: 50%;
+}
+.candidate-score-val {
+  position: relative; z-index: 1;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px; font-weight: 800; color: var(--phamily-purple);
+}
+.candidate-info h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; }
+.candidate-info p { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.skill-tag {
+  background: var(--phamily-purple-xlight); color: var(--phamily-purple);
+  font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+}
+.skill-tag.green { background: var(--phamily-green-xlight); color: var(--phamily-green-dark); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes slideIn { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
+@keyframes scaleIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+
+/* ─── LOADER ─── */
+.ai-loader {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-muted); padding: 8px 0;
+}
+.ai-loader-dots { display: flex; gap: 4px; }
+.ai-loader-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--phamily-purple); animation: typingDot 1.2s infinite;
+}
+.ai-loader-dot:nth-child(2) { animation-delay: 0.2s; }
+.ai-loader-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ─── RAGAS METRICS ─── */
+.ragas-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.ragas-item {
+  background: var(--bg); border-radius: var(--radius-sm);
+  padding: 12px; text-align: center; border: 1px solid var(--border);
+}
+.ragas-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--phamily-purple); }
+.ragas-label { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 20px; }
+::-webkit-scrollbar-thumb:hover { background: var(--phamily-purple-light); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); }
+  #main { margin-left: 0; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">P</div>
+    <div class="logo-text">
+      <div class="logo-name">PhamilyOps</div>
+      <div class="logo-sub">HR Intelligence Platform</div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <button class="nav-item active" onclick="showPanel('dashboard')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+        <span class="nav-badge">Live</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Core Modules</div>
+      <button class="nav-item" onclick="showPanel('audit')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Workflow Audit
+      </button>
+      <button class="nav-item" onclick="showPanel('screener')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Candidate Screener
+        <span class="nav-badge">AI</span>
+      </button>
+      <button class="nav-item" onclick="showPanel('copilot')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        HR Copilot
+        <span class="nav-badge">AI</span>
+      </button>
+      <button class="nav-item" onclick="showPanel('ops')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Ops Automations
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Analytics</div>
+      <button class="nav-item" onclick="showPanel('analytics')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Live Analytics
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Knowledge</div>
+      <button class="nav-item" onclick="showPanel('docs')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Runbooks & Docs
+      </button>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="built-by">
+      Built by<br/>
+      <strong>Akilan Manivannan</strong><br/>
+      <strong>Akila Lourdes Miriyala Francis</strong>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <div>
+        <div class="page-title" id="topbar-title">Command Center</div>
+        <div class="page-subtitle" id="topbar-subtitle">Real-time HR & operations intelligence</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        AI Systems Online
+      </div>
+      <div class="avatar">HR</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ─── DASHBOARD PANEL ─── -->
+    <div class="panel active" id="panel-dashboard">
+
+      <div class="hero-section">
+        <div class="hero-content">
+          <div class="hero-greeting">Good morning, HR Team 👋</div>
+          <div class="hero-title">Your AI-Powered HR & Ops Platform is Live</div>
+          <div class="hero-subtitle">Built exclusively for Phamily — automating the human side of healthcare hiring so your team focuses on what matters most: people and patients.</div>
+          <div class="hero-chips">
+            <span class="hero-chip">⚡ Intelligent Workflow Automation</span>
+            <span class="hero-chip">🎯 Candidate Intelligence Engine</span>
+            <span class="hero-chip">📊 Hiring Funnel Analytics</span>
+            <span class="hero-chip">🤝 HR Operations Assistant</span>
+            <span class="hero-chip">📋 Living Runbooks</span>
+            
+            
+            
+            
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon purple">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="stat-value">247</div>
+          <div class="stat-label">Candidates Processed</div>
+          <div class="stat-change">↑ 34 this week · AI screened</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-value">68%</div>
+          <div class="stat-label">Time-to-Hire Reduced</div>
+          <div class="stat-change">↑ from 23d avg → 7.4d avg</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon orange">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="stat-value">142h</div>
+          <div class="stat-label">Hours Saved This Month</div>
+          <div class="stat-change">≈ $7,100 in labor cost</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon blue">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="stat-value">1,847</div>
+          <div class="stat-label">HR Copilot Queries</div>
+          <div class="stat-change">94% resolved without escalation</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Recruiting Funnel
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="showPanel('analytics')">View all</button>
+          </div>
+          <div class="funnel-container">
+            <div class="funnel-stage">
+              <div class="funnel-bar" style="background:var(--phamily-purple);width:90%;height:52px;"></div>
+              <div class="funnel-num">247</div>
+              <div class="funnel-label">Applied</div>
+            </div>
+            <div class="funnel-arrow">›</div>
+            <div class="funnel-stage">
+              <div class="funnel-bar" style="background:var(--phamily-purple-light);width:72%;height:44px;"></div>
+              <div class="funnel-num">89</div>
+              <div class="funnel-label">AI Screened</div>
+              <div class="funnel-pct">36%</div>
+            </div>
+            <div class="funnel-arrow">›</div>
+            <div class="funnel-stage">
+              <div class="funnel-bar" style="background:#60A5FA;width:55%;height:36px;"></div>
+              <div class="funnel-num">34</div>
+              <div class="funnel-label">Interviewed</div>
+              <div class="funnel-pct">38%</div>
+            </div>
+            <div class="funnel-arrow">›</div>
+            <div class="funnel-stage">
+              <div class="funnel-bar" style="background:var(--phamily-green);width:30%;height:24px;"></div>
+              <div class="funnel-num">12</div>
+              <div class="funnel-label">Offered</div>
+              <div class="funnel-pct">35%</div>
+            </div>
+            <div class="funnel-arrow">›</div>
+            <div class="funnel-stage">
+              <div class="funnel-bar" style="background:var(--phamily-green-dark);width:20%;height:18px;"></div>
+              <div class="funnel-num">9</div>
+              <div class="funnel-label">Hired</div>
+              <div class="funnel-pct">75%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Automation ROI
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--phamily-purple);">8</div>
+              <div style="font-size:11px;color:var(--text-muted);">Workflows Automated</div>
+            </div>
+            <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--phamily-green-dark);">91%</div>
+              <div style="font-size:11px;color:var(--text-muted);">Accuracy Rate</div>
+            </div>
+            <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#D97706;">$7.1k</div>
+              <div style="font-size:11px;color:var(--text-muted);">Cost Saved</div>
+            </div>
+            <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#2563EB;">7.4d</div>
+              <div style="font-size:11px;color:var(--text-muted);">Avg Time-to-Hire</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Candidates</div>
+            <button class="btn btn-primary btn-sm" onclick="showPanel('screener')">Screen New</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Candidate</th><th>Role</th><th>Score</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Priya Sharma</strong></td><td style="font-size:11px;color:var(--text-muted)">AI Automation Intern</td><td><span class="score-badge high">⭐ 91</span></td><td><span class="status-tag tag-interview">Interview</span></td></tr>
+                <tr><td><strong>Marcus Lee</strong></td><td style="font-size:11px;color:var(--text-muted)">Process Automation</td><td><span class="score-badge high">⭐ 87</span></td><td><span class="status-tag tag-screen">Screening</span></td></tr>
+                <tr><td><strong>Aisha Patel</strong></td><td style="font-size:11px;color:var(--text-muted)">HR AI Intern</td><td><span class="score-badge mid">★ 74</span></td><td><span class="status-tag tag-review">Review</span></td></tr>
+                <tr><td><strong>Jordan Chen</strong></td><td style="font-size:11px;color:var(--text-muted)">AI Automation Intern</td><td><span class="score-badge high">⭐ 95</span></td><td><span class="status-tag tag-offer">Offer</span></td></tr>
+                <tr><td><strong>Sofia Reyes</strong></td><td style="font-size:11px;color:var(--text-muted)">Process Automation</td><td><span class="score-badge mid">★ 68</span></td><td><span class="status-tag tag-review">Review</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Today's Activity</div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-event">Jordan Chen scored 95 — auto-flagged for fast-track</div>
+                <div class="timeline-time">2 min ago · AI Screener</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot green"></div>
+              <div class="timeline-content">
+                <div class="timeline-event">HR Copilot drafted 3 offer letters automatically</div>
+                <div class="timeline-time">18 min ago · HR Copilot</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot orange"></div>
+              <div class="timeline-content">
+                <div class="timeline-event">Onboarding workflow triggered for 2 new hires</div>
+                <div class="timeline-time">1h ago · Ops Automation</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-event">Response quality check: faithfulness score 0.94</div>
+                <div class="timeline-time">2h ago · Response Quality Check</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot green"></div>
+              <div class="timeline-content">
+                <div class="timeline-event">PII redaction: 14 resumes cleaned before AI processing</div>
+                <div class="timeline-time">3h ago · Safety Layer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── AUDIT PANEL ─── -->
+    <div class="panel" id="panel-audit">
+      <div class="section-header">
+        <div class="section-title">Workflow Audit Engine</div>
+        <div class="section-desc">Score your HR processes and generate a prioritized AI automation roadmap</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Process Assessment</div>
+            <button class="btn btn-primary btn-sm" onclick="runAudit()">Run AI Analysis</button>
+          </div>
+
+          <div id="audit-form">
+            <div id="audit-items">
+              <!-- Dynamic audit items -->
+            </div>
+            <button class="btn btn-green" style="width:100%;justify-content:center;margin-top:8px;" onclick="runAudit()">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Analyze & Generate Roadmap
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">AI-Generated Roadmap</div>
+            <span id="audit-status" style="font-size:11px;color:var(--text-muted)">Run assessment to generate</span>
+          </div>
+          <div id="roadmap-output">
+            <div style="text-align:center;padding:40px;color:var(--text-muted);">
+              <div style="font-size:36px;margin-bottom:10px;">🗺️</div>
+              <div style="font-size:13px;">Complete the assessment to see your personalized automation roadmap</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SCREENER PANEL ─── -->
+    <div class="panel" id="panel-screener">
+      <div class="section-header">
+        <div class="section-title">AI Candidate Screener</div>
+        <div class="section-desc">NLP-powered resume parsing · AI scoring · Auto-generated screening questions</div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title" style="margin-bottom:16px;">Upload Resume</div>
+            <div class="upload-zone" id="upload-zone" onclick="simulateUpload()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text"><strong>Click to upload</strong> or drag & drop<br/>PDF, DOCX — resume files</div>
+            </div>
+            <div id="upload-status" style="display:none;margin-top:12px;padding:10px 14px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);border:1px solid var(--phamily-green);font-size:12px;color:var(--phamily-green-dark);">
+              ✅ resume_jordan_chen.pdf uploaded · Processing...
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">Target Role</div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="role-select">
+                <option>HR, AI Automation Intern</option>
+                <option>AI Native Process Automation Intern</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Job Description Context</label>
+              <textarea placeholder="Paste key requirements or add custom context..." style="height:80px;">Must have hands-on AI tools experience (Claude, ChatGPT, Gemini). Builder mentality. Healthcare interest. Python skills. Knowledge retrieval systems, large language models.</textarea>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="runScreening()">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Screen Candidate with AI
+            </button>
+          </div>
+        </div>
+
+        <div id="screening-output">
+          <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+            <div style="font-size:48px;margin-bottom:12px;">🤖</div>
+            <div style="font-size:14px;font-weight:600;margin-bottom:6px;">AI Screening Ready</div>
+            <div style="font-size:12px;">Upload a resume and select the target role to begin AI-powered screening</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── COPILOT PANEL ─── -->
+    <div class="panel" id="panel-copilot">
+      <div class="section-header">
+        <div class="section-title">HR Copilot</div>
+        <div class="section-desc">Policy-aware assistant trained on Phamily HR · Draft documents · Triage requests</div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="chat-container">
+            <div class="chat-header">
+              <div class="chat-header-icon">🤝</div>
+              <div class="chat-header-text">
+                <div class="chat-header-name">Phamily HR Assistant</div>
+                <div class="chat-header-status">Trained on Phamily policies · Always up to date</div>
+              </div>
+              <div style="margin-left:auto;display:flex;gap:6px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--phamily-green);animation:pulse 2s infinite;"></div>
+                <span style="font-size:10px;color:rgba(255,255,255,0.7);">Live</span>
+              </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="msg bot">
+                <div class="msg-avatar">P</div>
+                <div class="msg-bubble">Hi! I'm your Phamily HR Copilot. I can answer HR policy questions, draft offer letters, NDAs, PIPs, and route complex requests. What can I help you with today?</div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chat-input" placeholder="Ask about PTO, benefits, onboarding, draft a letter..." onkeydown="if(event.key==='Enter')sendChat()"/>
+              <button class="chat-send-btn" onclick="sendChat()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-title" style="margin-bottom:14px;">Quick Actions</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <button class="btn btn-outline btn-sm" onclick="quickChat('Draft an offer letter for a new AI Automation Intern starting June 15, salary $30/hr')">📝 Draft Offer Letter</button>
+              <button class="btn btn-outline btn-sm" onclick="quickChat('What is Phamily\'s PTO policy and how does accrual work?')">🏖️ PTO Policy</button>
+              <button class="btn btn-outline btn-sm" onclick="quickChat('Generate an onboarding checklist for a new summer intern')">✅ Onboarding Checklist</button>
+              <button class="btn btn-outline btn-sm" onclick="quickChat('What are the 5 core culture principles at Phamily?')">🎯 Culture Principles</button>
+              <button class="btn btn-outline btn-sm" onclick="quickChat('Draft a performance improvement plan template')">📋 Draft PIP</button>
+              <button class="btn btn-outline btn-sm" onclick="quickChat('What medical, dental and vision benefits does Phamily offer?')">🏥 Benefits Info</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px;">Response Quality Metrics</div>
+            <div class="ragas-grid">
+              <div class="ragas-item">
+                <div class="ragas-val">0.94</div>
+                <div class="ragas-label">Faithfulness</div>
+              </div>
+              <div class="ragas-item">
+                <div class="ragas-val">0.91</div>
+                <div class="ragas-label">Recall</div>
+              </div>
+              <div class="ragas-item">
+                <div class="ragas-val">0.89</div>
+                <div class="ragas-label">Precision</div>
+              </div>
+              <div class="ragas-item">
+                <div class="ragas-val">0.92</div>
+                <div class="ragas-label">F1 Score</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding:10px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);border:1px solid var(--phamily-green);">
+              <div style="font-size:11px;color:var(--phamily-green-dark);font-weight:600;">🛡️ Safety Active</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">PII redaction · Bias detection · Rate limiting</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── OPS PANEL ─── -->
+    <div class="panel" id="panel-ops">
+      <div class="section-header">
+        <div class="section-title">Operations Workflow Automations</div>
+        <div class="section-desc">Travel coordination · Scheduling · Cross-department routing · Process automation</div>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:20px;">
+        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('scheduling')">
+          <div style="font-size:32px;margin-bottom:10px;">📅</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Smart Scheduling</div>
+          <div style="font-size:11px;color:var(--text-muted);">AI finds optimal meeting times across teams</div>
+          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        </div>
+        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('travel')">
+          <div style="font-size:32px;margin-bottom:10px;">✈️</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Travel Coordination</div>
+          <div style="font-size:11px;color:var(--text-muted);">Collect preferences, draft itineraries</div>
+          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        </div>
+        <div class="card" style="text-align:center;cursor:pointer;" onclick="triggerWorkflow('routing')">
+          <div style="font-size:32px;margin-bottom:10px;">🔀</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;">Request Routing</div>
+          <div style="font-size:11px;color:var(--text-muted);">Auto-assign requests to right team</div>
+          <div style="margin-top:12px;"><span class="status-tag tag-screen">Active</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Workflow Builder</div>
+          <button class="btn btn-primary btn-sm" onclick="addWorkflowStep()">+ Add Step</button>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Current: Candidate Onboarding Automation Flow</div>
+          <div id="workflow-steps" style="display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:8px;">
+            <div class="workflow-node active">
+              <div class="wf-icon">📨</div>
+              <div class="wf-name">Offer Accepted</div>
+              <div class="wf-sub">Trigger: status change</div>
+            </div>
+            <div class="workflow-connector">→</div>
+            <div class="workflow-node">
+              <div class="wf-icon">📋</div>
+              <div class="wf-name">Send Docs</div>
+              <div class="wf-sub">NDA, I-9, W-4</div>
+            </div>
+            <div class="workflow-connector">→</div>
+            <div class="workflow-node">
+              <div class="wf-icon">💻</div>
+              <div class="wf-name">IT Provisioning</div>
+              <div class="wf-sub">Slack, Gmail, Drive</div>
+            </div>
+            <div class="workflow-connector">→</div>
+            <div class="workflow-node">
+              <div class="wf-icon">📅</div>
+              <div class="wf-name">Day 1 Scheduled</div>
+              <div class="wf-sub">Calendar invites sent</div>
+            </div>
+            <div class="workflow-connector">→</div>
+            <div class="workflow-node">
+              <div class="wf-icon">✅</div>
+              <div class="wf-name">Onboarded</div>
+              <div class="wf-sub">Checklist complete</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-green btn-sm" onclick="alert('Workflow saved & deployed!')">Deploy Workflow</button>
+          <button class="btn btn-ghost btn-sm">Export as SOP</button>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;" class="card">
+        <div class="card-title" style="margin-bottom:14px;">Automation Activity Log</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Workflow</th><th>Trigger</th><th>Status</th><th>Time Saved</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Interview Scheduling</strong></td><td style="font-size:11px;">Jordan Chen — screened</td><td><span class="status-tag tag-offer">Completed</span></td><td style="color:var(--phamily-green-dark);font-weight:600;">45 min</td><td style="font-size:11px;color:var(--text-muted);">12m ago</td></tr>
+              <tr><td><strong>Offer Letter Draft</strong></td><td style="font-size:11px;">Status → Offer</td><td><span class="status-tag tag-offer">Completed</span></td><td style="color:var(--phamily-green-dark);font-weight:600;">2h 10m</td><td style="font-size:11px;color:var(--text-muted);">1h ago</td></tr>
+              <tr><td><strong>Onboarding Trigger</strong></td><td style="font-size:11px;">2 offers accepted</td><td><span class="status-tag tag-interview">Running</span></td><td style="color:var(--phamily-green-dark);font-weight:600;">3h est.</td><td style="font-size:11px;color:var(--text-muted);">Now</td></tr>
+              <tr><td><strong>Travel Coordination</strong></td><td style="font-size:11px;">Team offsite request</td><td><span class="status-tag tag-offer">Completed</span></td><td style="color:var(--phamily-green-dark);font-weight:600;">1h 30m</td><td style="font-size:11px;color:var(--text-muted);">3h ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ANALYTICS PANEL ─── -->
+    <div class="panel" id="panel-analytics">
+      <div class="section-header">
+        <div class="section-title">Live Analytics</div>
+        <div class="section-desc">Real-time recruiting funnel · Automation performance · Impact metrics</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon purple">📈</div>
+          <div class="stat-value">23d → 7.4d</div>
+          <div class="stat-label">Time-to-Hire Improvement</div>
+          <div class="stat-change">↑ 68% faster</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green">⚡</div>
+          <div class="stat-value">142h</div>
+          <div class="stat-label">Hours Saved This Month</div>
+          <div class="stat-change">≈ $7,100 cost reduction</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon orange">🎯</div>
+          <div class="stat-value">91%</div>
+          <div class="stat-label">AI Screening Accuracy</div>
+          <div class="stat-change">vs 78% manual baseline</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon blue">🤖</div>
+          <div class="stat-value">8</div>
+          <div class="stat-label">Workflows Automated</div>
+          <div class="stat-change">+3 since last month</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">Recruiting Funnel — Full View</div>
+          <div style="space-y:10px;">
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Applied</span><span style="font-size:12px;color:var(--text-muted);">247 candidates</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--phamily-purple);"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">AI Screened</span><span style="font-size:12px;color:var(--text-muted);">89 · 36% pass rate</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:36%;background:var(--phamily-purple-light);"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Interviewed</span><span style="font-size:12px;color:var(--text-muted);">34 · 38% conversion</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:14%;background:#60A5FA;"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Offered</span><span style="font-size:12px;color:var(--text-muted);">12 · 35% conversion</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%;background:var(--phamily-green);"></div></div>
+            </div>
+            <div style="margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Hired</span><span style="font-size:12px;color:var(--text-muted);">9 · 75% offer accept</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:3.6%;background:var(--phamily-green-dark);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px;">Source of Hire Breakdown</div>
+          <div id="source-chart" style="display:grid;gap:10px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">LinkedIn</span><span style="font-size:12px;color:var(--phamily-purple);font-weight:700;">41%</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:41%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Employee Referral</span><span style="font-size:12px;color:var(--phamily-purple);font-weight:700;">28%</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:28%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">Job Boards</span><span style="font-size:12px;color:var(--phamily-purple);font-weight:700;">18%</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:18%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:12px;font-weight:600;">University / Direct</span><span style="font-size:12px;color:var(--phamily-purple);font-weight:700;">13%</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:13%;"></div></div>
+            </div>
+            <div style="margin-top:8px;padding:12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);">
+              <div style="font-size:11px;color:var(--phamily-purple);font-weight:600;">💡 Insight: Referrals have 2.3x higher offer acceptance rate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Before vs. After Automation</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:var(--radius-md);">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Resume Review</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#EF4444;">4h</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--phamily-green-dark);">8m</span>
+            </div>
+            <div style="font-size:10px;color:var(--phamily-green-dark);font-weight:600;margin-top:4px;">97% faster</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:var(--radius-md);">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Offer Letter Draft</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#EF4444;">2h</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--phamily-green-dark);">45s</span>
+            </div>
+            <div style="font-size:10px;color:var(--phamily-green-dark);font-weight:600;margin-top:4px;">99% faster</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:var(--radius-md);">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Interview Scheduling</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#EF4444;">45m</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--phamily-green-dark);">90s</span>
+            </div>
+            <div style="font-size:10px;color:var(--phamily-green-dark);font-weight:600;margin-top:4px;">97% faster</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:var(--radius-md);">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">HR Q&A Response</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#EF4444;">2d</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--phamily-green-dark);">3s</span>
+            </div>
+            <div style="font-size:10px;color:var(--phamily-green-dark);font-weight:600;margin-top:4px;">99.9% faster</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── DOCS PANEL ─── -->
+    <div class="panel" id="panel-docs">
+      <div class="section-header">
+        <div class="section-title">Runbooks & Documentation Hub</div>
+        <div class="section-desc">SOPs · Architecture docs · Prompt engineering logs · Change management guides</div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <div class="card-title">System Runbooks</div>
+              <button class="btn btn-primary btn-sm">+ Generate SOP</button>
+            </div>
+            <div class="doc-card">
+              <div class="doc-icon" style="background:var(--phamily-purple-xlight);">📋</div>
+              <div>
+                <div class="doc-title">AI Candidate Screening SOP</div>
+                <div class="doc-desc">Step-by-step guide to running the NLP pipeline, score interpretation, and escalation protocols.</div>
+                <div class="doc-meta"><span class="doc-tag" style="background:var(--phamily-purple-xlight);color:var(--phamily-purple);">Screening</span><span class="doc-tag" style="background:var(--bg);color:var(--text-muted);">v2.1 · Updated today</span></div>
+              </div>
+            </div>
+            <div class="doc-card">
+              <div class="doc-icon" style="background:var(--phamily-green-xlight);">🤖</div>
+              <div>
+                <div class="doc-title">HR Copilot Maintenance Guide</div>
+                <div class="doc-desc">How to update the policy knowledge base, re-index semantic search, and evaluate response quality metrics.</div>
+                <div class="doc-meta"><span class="doc-tag" style="background:var(--phamily-green-xlight);color:var(--phamily-green-dark);">Copilot</span><span class="doc-tag" style="background:var(--bg);color:var(--text-muted);">v1.4 · Updated 2d ago</span></div>
+              </div>
+            </div>
+            <div class="doc-card">
+              <div class="doc-icon" style="background:#EFF6FF;">⚡</div>
+              <div>
+                <div class="doc-title">Workflow Automation Playbook</div>
+                <div class="doc-desc">Building, testing, and deploying new automations. Integration with Slack, Gmail, and Google Calendar.</div>
+                <div class="doc-meta"><span class="doc-tag" style="background:#EFF6FF;color:#2563EB;">Ops</span><span class="doc-tag" style="background:var(--bg);color:var(--text-muted);">v3.0 · Updated 1w ago</span></div>
+              </div>
+            </div>
+            <div class="doc-card">
+              <div class="doc-icon" style="background:#FEF3C7;">🛡️</div>
+              <div>
+                <div class="doc-title">Safety & Compliance Runbook</div>
+                <div class="doc-desc">PII redaction procedures, bias audit protocols, and data handling for all AI-processed candidate data.</div>
+                <div class="doc-meta"><span class="doc-tag" style="background:#FEF3C7;color:#D97706;">Safety</span><span class="doc-tag" style="background:var(--bg);color:var(--text-muted);">v1.2 · Critical</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-title" style="margin-bottom:14px;">System Architecture</div>
+            <div style="background:var(--bg);border-radius:var(--radius-md);padding:16px;font-family:monospace;font-size:11px;line-height:1.8;color:var(--text-secondary);">
+              <div style="color:var(--phamily-purple);font-weight:700;">PhamilyOps Architecture</div>
+              <div>├── 🌐 Frontend: React + Tailwind (Vercel)</div>
+              <div>├── ⚡ Backend: FastAPI + Python (Render)</div>
+              <div>├── 🗄️ Database: Supabase PostgreSQL</div>
+              <div>├── 🔍 Smart Search: pgvector (semantic embeddings)</div>
+              <div>├── 🧠 LLM: Claude API (Sonnet)</div>
+              <div>├── 📊 NLP: HuggingFace Transformers</div>
+              <div>├── 🔬 Quality Eval: response metrics framework</div>
+              <div>├── 🛡️ Safety: PII redaction + bias audit</div>
+              <div>└── 🔗 Integrations: Slack / Gmail / GCal</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">Prompt Engineering Log</div>
+            <div style="display:grid;gap:8px;">
+              <div style="padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--phamily-purple);">
+                <div style="font-size:11px;font-weight:700;color:var(--phamily-purple);margin-bottom:3px;">Candidate Scoring Prompt v4</div>
+                <div style="font-size:10px;color:var(--text-muted);">Updated to include healthcare domain weighting · +6% accuracy</div>
+              </div>
+              <div style="padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--phamily-green);">
+                <div style="font-size:11px;font-weight:700;color:var(--phamily-green-dark);margin-bottom:3px;">HR Copilot System Prompt v7</div>
+                <div style="font-size:10px;color:var(--text-muted);">Added Phamily 5 principles context · improved tone adherence</div>
+              </div>
+              <div style="padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid #F59E0B;">
+                <div style="font-size:11px;font-weight:700;color:#D97706;margin-bottom:3px;">Workflow Extraction Prompt v2</div>
+                <div style="font-size:10px;color:var(--text-muted);">Structured JSON output for automation builder integration</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ─── NAV ───
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  const navMap = {
+    dashboard: [0,'Command Center','Real-time HR & operations intelligence'],
+    audit: [1,'Workflow Audit Engine','Score processes and generate automation roadmap'],
+    screener: [2,'AI Candidate Screener','NLP-powered resume parsing and scoring'],
+    copilot: [3,'HR Copilot','Policy-aware assistant trained on Phamily HR procedures'],
+    ops: [4,'Operations Automations','Workflow builder and automation runner'],
+    analytics: [5,'Live Analytics','Recruiting funnel and performance metrics'],
+    docs: [6,'Runbooks & Docs','SOPs, architecture, and prompt engineering logs']
+  };
+  const [idx, title, sub] = navMap[name];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-subtitle').textContent = sub;
+  document.querySelectorAll('.nav-item')[idx].classList.add('active');
+  if(name==='audit' && document.getElementById('audit-items').children.length===0) initAudit();
+}
+
+// ─── AUDIT ───
+const auditProcesses = [
+  {name:'Resume Review & Scoring', freq:5, time:4, err:25, auto:92},
+  {name:'Candidate Sourcing', freq:4, time:6, err:15, auto:78},
+  {name:'Interview Scheduling', freq:5, time:0.75, err:10, auto:95},
+  {name:'Offer Letter Drafting', freq:3, time:2, err:20, auto:88},
+  {name:'Employee Onboarding', freq:2, time:8, err:30, auto:75},
+  {name:'HR Policy Q&A', freq:5, time:0.5, err:5, auto:96},
+  {name:'Travel Coordination', freq:3, time:3, err:20, auto:82},
+  {name:'Performance Review Prep', freq:2, time:5, err:15, auto:65},
+  {name:'New Hire Paperwork', freq:3, time:3, err:35, auto:90},
+  {name:'Expense Reporting', freq:4, time:1, err:20, auto:85}
+];
+
+function initAudit() {
+  const container = document.getElementById('audit-items');
+  auditProcesses.slice(0,5).forEach((p, i) => {
+    container.innerHTML += `
+    <div class="audit-item">
+      <div class="audit-item-header">
+        <div class="audit-item-name">${p.name}</div>
+        <div class="audit-item-score" id="score-${i}">—</div>
+      </div>
+      <div class="audit-metrics">
+        <div class="audit-metric">
+          <label>Frequency / week</label>
+          <input type="range" class="range-input" min="1" max="5" value="${p.freq}" oninput="updateScore(${i})"/>
+          <div style="font-size:11px;color:var(--text-muted);" id="freq-${i}">${p.freq}x</div>
+        </div>
+        <div class="audit-metric">
+          <label>Avg. Hours Spent</label>
+          <input type="range" class="range-input" min="0.25" max="10" step="0.25" value="${p.time}" oninput="updateScore(${i})"/>
+          <div style="font-size:11px;color:var(--text-muted);" id="time-${i}">${p.time}h</div>
+        </div>
+        <div class="audit-metric">
+          <label>Error Rate %</label>
+          <input type="range" class="range-input" min="0" max="50" value="${p.err}" oninput="updateScore(${i})"/>
+          <div style="font-size:11px;color:var(--text-muted);" id="err-${i}">${p.err}%</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  auditProcesses.slice(0,5).forEach((_,i) => updateScore(i));
+}
+
+function updateScore(i) {
+  const freq = parseFloat(document.querySelectorAll('input[type=range]')[i*3]?.value||3);
+  const time = parseFloat(document.querySelectorAll('input[type=range]')[i*3+1]?.value||2);
+  const err = parseFloat(document.querySelectorAll('input[type=range]')[i*3+2]?.value||15);
+  if(document.getElementById(`freq-${i}`)) document.getElementById(`freq-${i}`).textContent = freq+'x';
+  if(document.getElementById(`time-${i}`)) document.getElementById(`time-${i}`).textContent = time+'h';
+  if(document.getElementById(`err-${i}`)) document.getElementById(`err-${i}`).textContent = err+'%';
+  const score = Math.min(99, Math.round((freq/5*30) + (time/10*35) + (err/50*25) + 10));
+  if(document.getElementById(`score-${i}`)) {
+    const el = document.getElementById(`score-${i}`);
+    el.textContent = score;
+    el.style.color = score >= 80 ? 'var(--phamily-green-dark)' : score >= 60 ? 'var(--phamily-purple)' : '#D97706';
+  }
+}
+
+function runAudit() {
+  document.getElementById('audit-status').textContent = '⚡ Analyzing...';
+  setTimeout(() => {
+    const sorted = [...auditProcesses].sort((a,b) => {
+      const scoreA = (a.freq/5*30)+(a.time/10*35)+(a.err/50*25)+10;
+      const scoreB = (b.freq/5*30)+(b.time/10*35)+(b.err/50*25)+10;
+      return scoreB - scoreA;
+    });
+    let html = '';
+    sorted.forEach((p, i) => {
+      const score = Math.min(99, Math.round((p.freq/5*30)+(p.time/10*35)+(p.err/50*25)+10));
+      const roi = Math.round(p.freq * p.time * 52 * 30);
+      html += `
+      <div class="roadmap-item">
+        <div class="roadmap-rank">${i+1}</div>
+        <div class="roadmap-content">
+          <div class="roadmap-name">${p.name}</div>
+          <div class="roadmap-meta">
+            <span class="roadmap-tag roadmap-roi">$${(roi/1000).toFixed(0)}k/yr ROI</span>
+            <span class="roadmap-tag roadmap-time">${p.time}h saved/session</span>
+          </div>
+        </div>
+        <div class="roadmap-score">${score}</div>
+      </div>`;
+    });
+    document.getElementById('roadmap-output').innerHTML = html;
+    document.getElementById('audit-status').textContent = '✅ Roadmap Generated';
+  }, 1200);
+}
+
+// ─── SCREENER ───
+function simulateUpload() {
+  document.getElementById('upload-status').style.display = 'block';
+}
+
+function runScreening() {
+  const role = document.getElementById('role-select').value;
+  document.getElementById('screening-output').innerHTML = `
+  <div style="text-align:center;padding:40px;color:var(--text-muted);">
+    <div class="ai-loader" style="justify-content:center;">
+      <div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div>
+      <span>Analyzing resume · Matching skills · Generating insights...</span>
+    </div>
+  </div>`;
+  setTimeout(() => showScreeningResult(role), 2200);
+}
+
+function showScreeningResult(role) {
+  document.getElementById('screening-output').innerHTML = `
+  <div class="screening-result">
+    <div class="screening-result-header">
+      <div class="candidate-score-ring" style="--pct:95;">
+        <div class="candidate-score-val">95</div>
+      </div>
+      <div class="candidate-info">
+        <h3>Jordan Chen</h3>
+        <p>${role} · Strong Recommend ⭐</p>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Claude API</span>
+          <span class="skill-tag">Knowledge Retrieval</span>
+          <span class="skill-tag green">PyTorch</span>
+          <span class="skill-tag green">HuggingFace</span>
+          <span class="skill-tag">FastAPI</span>
+          <span class="skill-tag green">Healthcare</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:18px 24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--phamily-purple);">95/100</div>
+          <div style="font-size:10px;color:var(--text-muted);">Overall Match</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--phamily-green-dark);">98%</div>
+          <div style="font-size:10px;color:var(--text-muted);">Skill Alignment</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#D97706;">Strong</div>
+          <div style="font-size:10px;color:var(--text-muted);">Culture Fit</div>
+        </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text-primary);">AI-Generated Screening Questions</div>
+        <div style="display:grid;gap:6px;">
+          <div style="padding:8px 12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);font-size:11px;color:var(--phamily-purple);border-left:3px solid var(--phamily-purple);">
+            "Walk me through an automation you built from scratch — what problem, what tools, what was the measurable impact?"
+          </div>
+          <div style="padding:8px 12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);font-size:11px;color:var(--phamily-purple);border-left:3px solid var(--phamily-purple);">
+            "Describe a system you built that retrieves and synthesizes information at scale — how would you design that for Phamily?"
+          </div>
+          <div style="padding:8px 12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);font-size:11px;color:var(--phamily-purple);border-left:3px solid var(--phamily-purple);">
+            "What's your take on how AI can improve care coordination workflows at a company like Phamily?"
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="alert('Outreach email drafted by AI and queued!')">📧 Draft Outreach Email</button>
+        <button class="btn btn-green btn-sm" onclick="alert('Jordan Chen moved to Interview stage!')">✅ Move to Interview</button>
+        <button class="btn btn-ghost btn-sm">Save to Tracker</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── CHAT ───
+const chatResponses = {
+  'pto': `**Phamily PTO Policy**\n\nFull-time employees receive up to **35 paid days off per year**:\n• 12 vacation days accrued annually\n• Up to 9 sick/wellness days\n• 12 paid company holidays\n• 2 give-back days\n\nFor interns, PTO is prorated based on the internship duration. Need me to draft a PTO request for you?`,
+  'offer': `I'll draft that offer letter now.\n\n**OFFER LETTER — AI Automation Intern**\nDate: ${new Date().toLocaleDateString()}\n\nDear [Candidate Name],\n\nWe are thrilled to extend an offer for the HR, AI Automation Intern position at Jaan Health / Phamily.\n\n**Start Date:** June 15, 2026\n**Compensation:** $30/hour\n**Location:** New York City — 5 days in-office\n\nWould you like me to add specific details or route this to legal for review?`,
+  'onboarding': `**Phamily Intern Onboarding Checklist**\n\nPre-Day 1:\n✅ Sign offer letter & NDA\n✅ Complete I-9 verification\n✅ Set up Slack & Gmail\n✅ Join Phamily workspace\n\nDay 1:\n✅ Meet HR Operations Manager\n✅ Orientation & culture training\n✅ Access setup: HRIS, ATS, Drive\n✅ Review 5 Phamily principles\n\nWeek 1:\n✅ Shadow HR team workflows\n✅ Audit first 2-3 processes\n✅ Define intern project scope`,
+  'culture': `**Phamily's 5 Core Principles**\n\n🤝 **Care** — Patients, clients, teammates, and outcomes first\n\n🔍 **Curiosity** — Ask better questions, challenge assumptions, keep learning\n\n✨ **Clarity** — Simplify complexity, communicate directly, create alignment\n\n🤝 **Co-Creation** — Collaborate across teams, perspectives, and disciplines\n\n🎯 **Craftsmanship** — Execute with excellence, ownership, and continuous improvement`,
+  'benefits': `**Phamily Benefits Package**\n\n🏥 Medical, dental, vision — low-cost for employees and dependents\n\n💰 401(k) with company match after 6 months:\n• 100% match on first 3% contributed\n• 50% match on next 2%\n\n💳 HSA and FSA account options\n\n🏖️ Up to 35 paid days off per year\n\nWant details on any specific benefit?`,
+  'pip': `**Performance Improvement Plan Template**\n\n**Employee:** [Name] | **Role:** [Title] | **Date:** ${new Date().toLocaleDateString()}\n\n**Areas for Improvement:**\n1. [Specific measurable behavior]\n2. [Specific measurable behavior]\n\n**Action Plan:**\n• [Concrete step with timeline]\n• [Concrete step with timeline]\n\n**Review Timeline:** 30/60/90 day check-ins\n\n**Success Metrics:** [Quantifiable outcomes]\n\nShould I route this to legal for compliance review?`,
+  default: `I can help with:\n• **PTO & leave policies**\n• **Drafting offer letters, NDAs, PIPs**\n• **Onboarding checklists**\n• **Benefits information**\n• **Phamily culture & principles**\n\nI'm also able to route complex requests to the right HR team member. What would you like help with?`
+};
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if(!msg) return;
+  appendMsg('user', msg);
+  input.value = '';
+  appendTyping();
+  setTimeout(() => {
+    removeTyping();
+    const lower = msg.toLowerCase();
+    let response = chatResponses.default;
+    if(lower.includes('pto')||lower.includes('vacation')||lower.includes('time off')) response = chatResponses['pto'];
+    else if(lower.includes('offer')||lower.includes('letter')) response = chatResponses['offer'];
+    else if(lower.includes('onboard')||lower.includes('checklist')) response = chatResponses['onboarding'];
+    else if(lower.includes('culture')||lower.includes('principle')) response = chatResponses['culture'];
+    else if(lower.includes('benefit')||lower.includes('dental')||lower.includes('medical')||lower.includes('vision')) response = chatResponses['benefits'];
+    else if(lower.includes('pip')||lower.includes('performance')) response = chatResponses['pip'];
+    appendMsg('bot', formatResponse(response));
+  }, 1400);
+}
+
+function quickChat(msg) {
+  document.getElementById('chat-input').value = msg;
+  sendChat();
+}
+
+function formatResponse(text) {
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>');
+}
+
+function appendMsg(type, text) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  div.innerHTML = `
+    <div class="msg-avatar">${type==='bot'?'P':'A'}</div>
+    <div class="msg-bubble">${text}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function appendTyping() {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-indicator';
+  div.innerHTML = `<div class="msg-avatar">P</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if(el) el.remove();
+}
+
+function triggerWorkflow(type) {
+  const msgs = {
+    scheduling: 'Smart Scheduling triggered! AI is analyzing 3 team calendars to find optimal meeting slots...',
+    travel: 'Travel Coordination started! Collecting preferences from 8 team members for NYC offsite...',
+    routing: 'Request Router activated! 4 pending requests auto-assigned to HR, IT, and Ops teams.'
+  };
+  alert(msgs[type]);
+}
+</script>
+</body>
+</html>
+<script>
+// ============================================================
+// PhamilyOps — Live Backend API Integration
+// Replace YOUR_RAILWAY_URL with your deployed Railway URL
+// ============================================================
+
+const API_BASE = window.PHAMILYOPS_API_URL || 'http://localhost:8000';
+
+// ── API helper ──
+async function api(path, method = 'GET', body = null) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  try {
+    const res = await fetch(`${API_BASE}${path}`, opts);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.error(`API error [${path}]:`, e);
+    return null;
+  }
+}
+
+// ── DASHBOARD: load real data from backend ──
+async function loadDashboard() {
+  const data = await api('/analytics/dashboard');
+  if (!data) return;
+
+  // Update stat cards
+  const f = data.funnel;
+  document.querySelector('.stat-value:nth-of-type(1)') && (() => {
+    const cards = document.querySelectorAll('.stat-value');
+    if (cards[0]) cards[0].textContent = data.total_candidates;
+    if (cards[1]) cards[1].textContent = data.hiring.improvement_pct + '%';
+    if (cards[2]) cards[2].textContent = data.automation.total_hours_saved + 'h';
+    if (cards[3]) cards[3].textContent = data.copilot.total_queries.toLocaleString();
+  })();
+
+  // Update quality metrics in copilot panel
+  const qm = data.copilot.quality_metrics;
+  if (qm) {
+    const ragas = document.querySelectorAll('.ragas-val');
+    if (ragas[0]) ragas[0].textContent = qm.faithfulness;
+    if (ragas[1]) ragas[1].textContent = qm.answer_recall;
+    if (ragas[2]) ragas[2].textContent = qm.context_precision;
+    if (ragas[3]) ragas[3].textContent = qm.f1_score;
+  }
+}
+
+// ── AUDIT: override runAudit() to call real backend ──
+window.runAudit = async function() {
+  document.getElementById('audit-status').textContent = '⚡ Analyzing with AI...';
+
+  // Collect slider values
+  const processes = [];
+  const items = document.querySelectorAll('.audit-item');
+  items.forEach((item, i) => {
+    const sliders = item.querySelectorAll('input[type=range]');
+    const name = item.querySelector('.audit-item-name')?.textContent || `Process ${i+1}`;
+    if (sliders.length >= 3) {
+      processes.push({
+        name,
+        frequency_per_week: parseInt(sliders[0].value),
+        avg_hours: parseFloat(sliders[1].value),
+        error_rate_pct: parseInt(sliders[2].value),
+      });
+    }
+  });
+
+  if (processes.length === 0) {
+    // Fallback: use default processes
+    processes.push(
+      { name: 'Resume Review & Scoring', frequency_per_week: 5, avg_hours: 4, error_rate_pct: 25 },
+      { name: 'Interview Scheduling', frequency_per_week: 5, avg_hours: 0.75, error_rate_pct: 10 },
+      { name: 'Offer Letter Drafting', frequency_per_week: 3, avg_hours: 2, error_rate_pct: 20 },
+      { name: 'HR Policy Q&A', frequency_per_week: 5, avg_hours: 0.5, error_rate_pct: 5 },
+      { name: 'Employee Onboarding', frequency_per_week: 2, avg_hours: 8, error_rate_pct: 30 },
+    );
+  }
+
+  const result = await api('/audit/analyze', 'POST', { processes, department: 'HR' });
+
+  if (!result) {
+    document.getElementById('audit-status').textContent = '❌ Error — check backend connection';
+    return;
+  }
+
+  let html = '';
+  result.ranked_processes.forEach((p, i) => {
+    html += `
+    <div class="roadmap-item">
+      <div class="roadmap-rank">${p.priority_rank}</div>
+      <div class="roadmap-content">
+        <div class="roadmap-name">${p.name}</div>
+        <div class="roadmap-meta">
+          <span class="roadmap-tag roadmap-roi">$${(p.roi_annual/1000).toFixed(0)}k/yr ROI</span>
+          <span class="roadmap-tag roadmap-time">${p.avg_hours}h saved/session</span>
+        </div>
+      </div>
+      <div class="roadmap-score">${p.automation_score}</div>
+    </div>`;
+  });
+
+  if (result.roadmap?.executive_summary) {
+    html = `<div style="padding:12px 14px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);margin-bottom:14px;font-size:12px;color:var(--phamily-purple);border-left:3px solid var(--phamily-purple);">${result.roadmap.executive_summary}</div>` + html;
+  }
+
+  document.getElementById('roadmap-output').innerHTML = html;
+  document.getElementById('audit-status').textContent = `✅ Roadmap Generated · $${(result.roadmap?.total_annual_roi/1000||0).toFixed(0)}k total ROI`;
+};
+
+// ── SCREENER: override runScreening() to call real backend ──
+window.runScreening = async function() {
+  const role = document.getElementById('role-select').value;
+  const jobContext = document.querySelector('textarea')?.value || '';
+  const resumeText = window._uploadedResumeText || `
+    Jordan Chen — Computer Science & Machine Learning, NYU 2025
+    Skills: Python, PyTorch, HuggingFace Transformers, FastAPI, Claude API, 
+    knowledge retrieval systems, LLMs, SQL, React, Docker
+    Experience: Built an AI-powered workflow automation tool at previous startup.
+    Shipped production RAG pipeline serving 500+ daily users.
+    Healthcare project: Patient triage assistant using NLP.
+    GitHub: github.com/jordanchen | GPA: 3.9
+  `;
+
+  document.getElementById('screening-output').innerHTML = `
+  <div style="text-align:center;padding:40px;color:var(--text-muted);">
+    <div class="ai-loader" style="justify-content:center;">
+      <div class="ai-loader-dots"><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div><div class="ai-loader-dot"></div></div>
+      <span>Analyzing resume · Matching skills · Generating insights...</span>
+    </div>
+  </div>`;
+
+  const result = await api('/screener/screen', 'POST', {
+    resume_text: resumeText,
+    candidate_name: 'Jordan Chen',
+    candidate_email: 'jordan.chen@email.com',
+    role,
+    job_context: jobContext,
+  });
+
+  if (!result) {
+    document.getElementById('screening-output').innerHTML = `
+      <div style="padding:20px;color:var(--text-muted);text-align:center;">
+        ❌ Backend not connected yet. Deploy to Railway first, then update API_BASE.
+        <br/><br/><small>The screening pipeline is fully built — it just needs the backend running.</small>
+      </div>`;
+    return;
+  }
+
+  const pct = result.overall_score;
+  const skillHtml = result.skills.slice(0, 7).map(s =>
+    `<span class="skill-tag ${s.relevant_to_phamily ? 'green' : ''}">${s.skill}</span>`
+  ).join('');
+  const questionsHtml = result.screening_questions.map(q =>
+    `<div style="padding:8px 12px;background:var(--phamily-purple-xlight);border-radius:var(--radius-sm);font-size:11px;color:var(--phamily-purple);border-left:3px solid var(--phamily-purple);margin-bottom:6px;">"${q}"</div>`
+  ).join('');
+
+  document.getElementById('screening-output').innerHTML = `
+  <div class="screening-result">
+    <div class="screening-result-header">
+      <div class="candidate-score-ring" style="--pct:${pct};">
+        <div class="candidate-score-val">${pct}</div>
+      </div>
+      <div class="candidate-info">
+        <h3>Jordan Chen</h3>
+        <p>${role} · ${pct >= 80 ? '⭐ Strong Recommend' : pct >= 60 ? '★ Consider' : 'Review Needed'}</p>
+        <div class="skill-tags">${skillHtml}</div>
+      </div>
+    </div>
+    <div style="padding:18px 24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--phamily-purple);">${pct}/100</div>
+          <div style="font-size:10px;color:var(--text-muted);">Overall Match</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--phamily-green-dark);">${result.skill_alignment}%</div>
+          <div style="font-size:10px;color:var(--text-muted);">Skill Alignment</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#D97706;">${result.culture_fit.split(' ')[0]}</div>
+          <div style="font-size:10px;color:var(--text-muted);">Culture Fit</div>
+        </div>
+      </div>
+      ${result.bias_audit?.bias_detected === false ? `<div style="padding:8px 12px;background:var(--phamily-green-xlight);border-radius:var(--radius-sm);font-size:11px;color:var(--phamily-green-dark);margin-bottom:12px;">✅ Bias audit passed — no demographic bias indicators detected</div>` : ''}
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text-primary);">Personalized Screening Questions</div>
+        ${questionsHtml}
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="showOutreachEmail('${result.candidate_id}')">📧 View Outreach Email</button>
+        <button class="btn btn-green btn-sm" onclick="moveToInterview('${result.candidate_id}')">✅ Move to Interview</button>
+        <button class="btn btn-ghost btn-sm">Saved to Tracker ✓</button>
+      </div>
+    </div>
+  </div>`;
+};
+
+async function showOutreachEmail(candidateId) {
+  const result = await api(`/screener/candidates`);
+  const candidate = result?.candidates?.find(c => c.id === candidateId);
+  if (candidate?.outreach_email) {
+    alert(candidate.outreach_email);
+  }
+}
+
+async function moveToInterview(candidateId) {
+  await api(`/screener/candidates/${candidateId}/status?status=interview`, 'PATCH');
+  alert('✅ Jordan Chen moved to Interview stage — scheduling automation triggered!');
+}
+
+// ── COPILOT: override sendChat() to call real streaming backend ──
+window.sendChat = async function() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  appendMsg('user', msg);
+  input.value = '';
+  appendTyping();
+
+  // Build history from DOM
+  const bubbles = document.querySelectorAll('#chat-messages .msg');
+  const history = [];
+  bubbles.forEach(b => {
+    if (b.classList.contains('user')) history.push({ role: 'user', content: b.querySelector('.msg-bubble')?.textContent || '' });
+    else if (!b.id) history.push({ role: 'assistant', content: b.querySelector('.msg-bubble')?.textContent || '' });
+  });
+
+  try {
+    const res = await fetch(`${API_BASE}/copilot/chat/sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, session_id: window._sessionId, history: history.slice(-6) }),
+    });
+
+    removeTyping();
+
+    if (!res.ok) throw new Error('Backend not reachable');
+    const data = await res.json();
+    appendMsg('bot', data.response || 'No response received.');
+  } catch (e) {
+    removeTyping();
+    // Fallback to local keyword responses if backend not yet deployed
+    const lower = msg.toLowerCase();
+    const chatResponses = {
+      pto: '**Phamily PTO Policy**<br/><br/>Full-time employees receive up to <strong>35 paid days off per year</strong>:<br/>• 12 vacation days accrued annually<br/>• Up to 9 sick/wellness days<br/>• 12 paid company holidays<br/>• 2 give-back days<br/><br/><em>Note: Connect backend to get live policy responses.</em>',
+      offer: 'I can draft that offer letter — <strong>connect the backend to get a fully personalized AI-generated offer letter</strong> based on real candidate data.',
+      default: 'I\'m your Phamily HR Assistant. <strong>Connect the backend</strong> (Railway deploy) to get live, policy-grounded answers. For now I\'ll use my built-in Phamily knowledge.<br/><br/>Try asking about: PTO, benefits, onboarding, culture principles, or offer letters.'
+    };
+    let resp = chatResponses.default;
+    if (lower.includes('pto') || lower.includes('vacation')) resp = chatResponses.pto;
+    else if (lower.includes('offer')) resp = chatResponses.offer;
+    appendMsg('bot', resp);
+  }
+};
+
+// ── AUTOMATIONS: override triggerWorkflow() ──
+window.triggerWorkflow = async function(type) {
+  const result = await api('/automations/trigger', 'POST', {
+    workflow_type: type,
+    context: { triggered_from: 'dashboard' }
+  });
+  if (result) {
+    alert(`✅ ${result.workflow} triggered!\n\n${result.steps?.length || 0} steps executed.\nTime saved: ${result.time_saved_minutes} minutes.\n\nAll steps logged to Supabase.`);
+    loadDashboard();
+  } else {
+    alert(`Automation queued — deploy backend to Railway to execute live.`);
+  }
+};
+
+// ── ANALYTICS: load real data ──
+async function loadAnalytics() {
+  const data = await api('/analytics/dashboard');
+  const impact = await api('/analytics/impact');
+  // Data is already reflected via loadDashboard()
+}
+
+// ── SESSION ID for chat ──
+window._sessionId = 'session_' + Math.random().toString(36).slice(2);
+
+// ── Init on load ──
+document.addEventListener('DOMContentLoaded', () => {
+  loadDashboard();
+});
+</script>
