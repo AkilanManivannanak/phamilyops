@@ -1316,6 +1316,14 @@ function showScreenResult(data, name, skills) {
   logActivity(`${name} screened — scored ${score}/100`, 'Just now', 'g');
 }
 function showEmail(email) { document.getElementById('em-out').textContent=email; go('emailai'); }
+function copyOutreachEmail(email) {
+  if(!email) return;
+  // Store email and navigate to email composer
+  window._pendingEmail = email;
+  document.getElementById('em-out').textContent = email;
+  go('emailai');
+  showToast('📧 Outreach email loaded in AI Email Composer');
+}
 function addToTracker(name,score,role) { logActivity(`${name} added to candidate tracker · Score ${score}`, 'Just now', 'pp'); showToast(`✅ ${name} saved to candidate tracker`); }
 function logActivity(evt, time, dotClass='') {
   const log = document.getElementById('activity-log');
