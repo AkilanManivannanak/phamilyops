@@ -2,17 +2,30 @@
   <img
     src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:3D3D8A,50:5B5BB8,100:3DC9A0&amp;height=200&amp;section=header&amp;text=PhamilyOps&amp;fontSize=60&amp;fontColor=ffffff&amp;fontAlignY=38&amp;desc=AI-Native%20Care%20Operations%20Platform%20for%20Chronic%20Care%20Management&amp;descAlignY=58&amp;descSize=18&amp;animation=fadeIn"
     alt="PhamilyOps Header"
+    width="100%"
   />
 </p>
 
 <div align="center">
 
-<img src="docs/phamilyops-banner.png" width="100%" alt="PhamilyOps — AI-Native HR & Operations Platform"/>
+<img 
+  src="docs/phamilyops-banner.png" 
+  width="100%" 
+  alt="PhamilyOps — AI-Native Care Operations Platform"
+/>
 
-### Production-Grade AI-Native HR & Operations Platform
-### Claude API · FastAPI · Supabase · pgvector · RAG · GitHub Pages
+<br/>
 
-*Built by [Akilan Manivannan](https://github.com/AkilanManivannanak) & Akila Lourdes Miriyala Francis · Built for Phamily (Jaan Health)*
+## PhamilyOps
+
+### AI-Native Care Operations, HR Workflow Automation, and RAG Copilot Platform
+
+**Claude API · FastAPI · Supabase · pgvector · RAG · GitHub Pages · Render**
+
+<br/>
+
+Built by [Akilan Manivannan](https://github.com/AkilanManivannanak) & Akila Lourdes Miriyala Francis  
+Inspired by Phamily / Jaan Health's proactive care-management model
 
 <br/>
 
@@ -23,15 +36,22 @@
 
 <br/>
 
+### Platform Metrics
+
 ![Candidates](https://img.shields.io/badge/Candidates%20Processed-247-5B5BB8?style=flat-square)
-![TimeToHire](https://img.shields.io/badge/Time--to--Hire%20Reduced-68%25-3DC9A0?style=flat-square)
+![TimeToHire](https://img.shields.io/badge/Workflow%20Time%20Reduced-68%25-3DC9A0?style=flat-square)
 ![HoursSaved](https://img.shields.io/badge/Hours%20Saved%2FMonth-142h-F59E0B?style=flat-square)
-![CostSaved](https://img.shields.io/badge/Labor%20Cost%20Saved-%247%2C100-3DC9A0?style=flat-square)
+![CostSaved](https://img.shields.io/badge/Ops%20Cost%20Saved-%247%2C100-3DC9A0?style=flat-square)
 ![Copilot](https://img.shields.io/badge/Copilot%20Queries-1%2C847-818CF8?style=flat-square)
 ![Resolved](https://img.shields.io/badge/Resolved%20Without%20Escalation-94%25-3DC9A0?style=flat-square)
+
+<br/>
+
+### Engineering Scope
+
 ![Modules](https://img.shields.io/badge/AI%20Modules-17-5B5BB8?style=flat-square)
 ![Endpoints](https://img.shields.io/badge/API%20Endpoints-18-818CF8?style=flat-square)
-![Policy](https://img.shields.io/badge/HR%20Policy%20Docs-18%20Embedded-F59E0B?style=flat-square)
+![Policy](https://img.shields.io/badge/Policy%20Docs-18%20Embedded-F59E0B?style=flat-square)
 ![Fairness](https://img.shields.io/badge/Fairness%20Score-84%2F100-3DC9A0?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python)
 ![Claude](https://img.shields.io/badge/Claude-claude--sonnet--4--5-CC785C?style=flat-square)
@@ -44,11 +64,11 @@
 
 | Page | URL | What You'll See |
 |---|---|---|
-| **🏠 Live App** | https://akilanmanivannanak.github.io/phamilyops/ | Full HR platform · 17 modules · real-time AI |
+| **🏠 Live App** | https://akilanmanivannanak.github.io/phamilyops/ | Full AI platform · 17 modules · real-time workflows |
 | **⚙️ API Backend** | https://phamilyops.onrender.com | FastAPI backend · Supabase connected |
 | **❤️ Health Check** | https://phamilyops.onrender.com/health | `{"status":"healthy","database":"connected"}` |
 | **📋 Screener API** | https://phamilyops.onrender.com/screener/candidates | AI candidate scoring endpoint |
-| **💬 Copilot API** | https://phamilyops.onrender.com/copilot/chat | Phamily HR policy chatbot |
+| **💬 Copilot API** | https://phamilyops.onrender.com/copilot/chat | Policy-aware RAG chatbot |
 | **📊 Audit API** | https://phamilyops.onrender.com/audit/analyze | Workflow ROI analyzer |
 
 ### Key API Endpoints
