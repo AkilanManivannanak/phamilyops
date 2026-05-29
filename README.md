@@ -1,6 +1,6 @@
 <div align="center">
 
-![PhamilyOps Banner](https://capsule-render.vercel.app/api?type=waving&color=0:3D3D8A,50:5B5BB8,100:3DC9A0&height=220&section=header&text=PhamilyOps&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=AI-Native%20HR%20%26%20Operations%20Platform&descAlignY=58&descSize=18)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3D3D8A,50:5B5BB8,100:3DC9A0&height=220&section=header&text=PhamilyOps&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=AI-Native%20HR%20%26%20Operations%20Platform&descAlignY=58&descSize=18" width="100%"/>
 
 ```
 ██████╗ ██╗  ██╗ █████╗ ███╗   ███╗██╗██╗  ██╗   ██╗ ██████╗ ██████╗ ███████╗
@@ -877,6 +877,6 @@ phamilyops/
 
 *Built exclusively for Phamily (Jaan Health) — automating the human side of healthcare hiring*
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=0:3DC9A0,50:5B5BB8,100:3D3D8A&height=120&section=footer)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3DC9A0,50:5B5BB8,100:3D3D8A&height=120&section=footer" width="100%"/>
 
 </div>
