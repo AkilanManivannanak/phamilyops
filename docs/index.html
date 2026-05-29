@@ -199,7 +199,8 @@ tr:hover td{background:var(--bg)}
 .notif-item.unread{background:var(--pp-xl)}
 
 /* TOAST */
-#toast{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--pp);color:#fff;padding:9px 20px;border-radius:22px;box-shadow:var(--shl);font-size:12px;font-weight:600;z-index:9999;animation:fi .3s ease;max-width:400px;text-align:center}
+#toast{display:none;position:fixed;top:70px;right:16px;background:var(--pp);color:#fff;padding:10px 16px;border-radius:var(--r2);box-shadow:var(--shl);font-size:12px;font-weight:600;z-index:9999;animation:slideInRight .3s ease;max-width:320px;display:flex;align-items:flex-start;gap:8px;}
+@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 
 /* CALENDAR */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
@@ -931,9 +932,17 @@ document.addEventListener('click', e => {
   if (notifOpen && !document.getElementById('notif-panel').contains(e.target) && !e.target.closest('.bell-btn')) { notifOpen = false; document.getElementById('notif-panel').style.display = 'none'; }
 });
 function showToast(msg, dur = 3500) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', dur);
+  // Remove existing toast
+  const old = document.getElementById('toast');
+  if(old) old.remove();
+  // Create fresh toast
+  const t = document.createElement('div');
+  t.id = 'toast';
+  const icon = msg.startsWith('✅')||msg.startsWith('🎉') ? '✅' : msg.startsWith('❌') ? '❌' : msg.startsWith('⏰') ? '⏰' : '💬';
+  t.innerHTML = `<span style="font-size:14px;flex-shrink:0">${icon}</span><div style="flex:1">${msg.replace(/^[✅❌⏰💬🎯📄💼📧🔔⚡📊🛡️📝]/,'').trim()}</div><button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:14px;padding:0;margin-left:4px;flex-shrink:0">×</button>`;
+  t.style.cssText = 'display:flex;position:fixed;top:70px;right:16px;background:var(--pp);color:#fff;padding:10px 14px;border-radius:var(--r2);box-shadow:var(--shl);font-size:12px;font-weight:600;z-index:9999;max-width:300px;align-items:center;gap:8px;animation:slideInRight .3s ease;';
+  document.body.appendChild(t);
+  setTimeout(() => { if(t.parentElement) t.remove(); }, dur);
 }
 function loader(txt = 'AI generating...') { return `<div style="display:flex;align-items:center;gap:8px;padding:30px;justify-content:center;color:var(--tm)"><div class="dots"><span></span><span></span><span></span></div><span style="font-size:12px">${txt}</span></div>`; }
 
@@ -1223,23 +1232,49 @@ async function runScreening() {
   const role = document.getElementById('role-sel').value;
   const notes = document.getElementById('screen-notes').value;
   const github = document.getElementById('cand-github').value;
-  const text = resumeText || `${name} — experienced in Python, AI tools (Claude API, ChatGPT), FastAPI, machine learning with PyTorch, healthcare interest, builder mentality, shipped production systems.`;
-  document.getElementById('screen-out').innerHTML = loader('Analyzing resume · Extracting skills · Scoring...');
+  const text = resumeText || '';
+  document.getElementById('screen-out').innerHTML = loader('Scoring candidate...');
 
-  // Extract skills locally
+  // Extract skills locally — instant, no API needed
+  const skillMap = {python:'Python',pytorch:'PyTorch',fastapi:'FastAPI',claude:'Claude API',chatgpt:'ChatGPT',huggingface:'HuggingFace',sql:'SQL',docker:'Docker',react:'React',healthcare:'Healthcare',tensorflow:'TensorFlow',langchain:'LangChain',javascript:'JavaScript',typescript:'TypeScript','machine learning':'ML','data science':'Data Science',mongodb:'MongoDB',supabase:'Supabase',github:'GitHub'};
+  const tl = (text + ' ' + name + ' ' + notes + ' ' + github).toLowerCase();
   const skills = [];
-  const skillMap = {python:'Python',pytorch:'PyTorch',fastapi:'FastAPI',claude:'Claude API',chatgpt:'ChatGPT',huggingface:'HuggingFace',sql:'SQL',docker:'Docker',react:'React',healthcare:'Healthcare',tensorflow:'TensorFlow',langchain:'LangChain',javascript:'JavaScript',typescript:'TypeScript'};
-  const tl = text.toLowerCase();
   Object.entries(skillMap).forEach(([k,v])=>{if(tl.includes(k))skills.push(v)});
 
-  const result = await ai(
-    'You are an expert technical recruiter for Phamily (Jaan Health), an AI-based care management company. Score candidates rigorously. Return valid JSON only, no markdown.',
-    `Role: ${role}\nContext: ${notes}\nGitHub: ${github}\n\nResume:\n${text.slice(0,2000)}\n\nDetected skills: ${skills.join(', ')}\n\nReturn JSON:\n{"overall_score":0,"rationale":"","strengths":[],"concerns":[],"screening_questions":[],"outreach_email":"","culture_fit":"Strong|Moderate|Unclear","recommendation":"Move forward|Hold|Pass"}`
-  );
+  // Score algorithmically — instant
+  let score = 60;
+  if(skills.includes('Python')) score += 8;
+  if(skills.includes('Claude API') || skills.includes('ChatGPT')) score += 10;
+  if(skills.includes('Healthcare')) score += 8;
+  if(skills.includes('FastAPI') || skills.includes('PyTorch')) score += 6;
+  if(skills.includes('ML') || skills.includes('HuggingFace')) score += 5;
+  if(github && github.includes('github')) score += 3;
+  score = Math.min(99, score + Math.floor(Math.random()*5));
+  const fit = score >= 85 ? 'Strong' : score >= 70 ? 'Moderate' : 'Unclear';
+  const rec = score >= 80 ? 'Move forward' : score >= 65 ? 'Hold' : 'Pass';
 
-  let data = {};
-  try { data = JSON.parse(result); } catch { data = {overall_score:Math.floor(Math.random()*20)+75,rationale:'Strong candidate with relevant AI background.',strengths:['AI tools experience','Builder mentality','Healthcare awareness'],concerns:['Limited healthcare domain depth'],screening_questions:['Walk me through an AI automation you built from scratch.','How would you approach building a resume screening pipeline for Phamily?','What excites you most about AI in healthcare?'],outreach_email:`Dear ${name},\n\nThank you for your interest in the ${role} position at Phamily (Jaan Health). Your background in AI and automation is impressive.\n\nWe'd love to connect for a conversation.\n\nBest,\nPhamily HR Team`,culture_fit:'Strong',recommendation:'Move forward'}; }
+  // Show results immediately with local scoring
+  const qs = [
+    `Walk me through an AI automation you built from scratch — what was the measurable impact?`,
+    `How would you design a resume screening pipeline specifically for Phamily's healthcare hiring needs?`,
+    `Phamily's mission is improving care for underserved patients. How does your background connect to that?`
+  ];
+  const email = `Subject: Exciting Opportunity — ${role} at Phamily\n\nDear ${name},\n\nI came across your profile and was immediately impressed by your background in ${skills.slice(0,3).join(', ')}. Phamily (Jaan Health) is building AI-powered care management that transforms healthcare for hundreds of thousands of patients.\n\nWe're looking for a ${role} who embodies our principles: Care, Curiosity, Clarity, Co-Creation, and Craftsmanship. Based on your profile, I believe you'd be a great fit.\n\nWould you be open to a 20-minute conversation this week?\n\nBest regards,\nPhamily HR Team`;
 
+  let data = {overall_score:score, rationale:`${name} shows ${fit.toLowerCase()} alignment with ${role} requirements. ${skills.length} relevant skills detected.`, strengths: skills.slice(0,3).map(s=>`Strong ${s} background`), concerns:score<80?['Could demonstrate more healthcare domain knowledge']:['Strong candidate — move quickly before competing offers'], screening_questions:qs, outreach_email:email, culture_fit:fit, recommendation:rec};
+
+  // Try Claude in background for richer analysis (non-blocking)
+  ai('You are a Phamily recruiter. Score this candidate. Return JSON only with keys: overall_score, rationale, strengths(array), concerns(array), screening_questions(array of 3), culture_fit, recommendation',
+    `Role: ${role}. Candidate: ${name}. Skills: ${skills.join(',')}. GitHub: ${github}. Notes: ${notes}. Score 0-100 and provide screening questions.`, 500
+  ).then(result => {
+    if(result) { try { const d=JSON.parse(result); if(d.overall_score) { data={...data,...d}; showScreenResult(data, name, skills); } } catch{} }
+  });
+
+  const score = data.overall_score||80;
+  showScreenResult(data, name, skills);
+}
+
+function showScreenResult(data, name, skills) {
   const score = data.overall_score||80;
   const pct = score;
   document.getElementById('screen-out').innerHTML = `
