@@ -1270,7 +1270,6 @@ async function runScreening() {
     if(result) { try { const d=JSON.parse(result); if(d.overall_score) { data={...data,...d}; showScreenResult(data, name, skills); } } catch{} }
   });
 
-  const score = data.overall_score||80;
   showScreenResult(data, name, skills);
 }
 
