@@ -875,6 +875,12 @@ phamilyops/
 
 *Built exclusively for Phamily (Jaan Health) — automating the human side of healthcare hiring*
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3DC9A0,50:5B5BB8,100:3D3D8A&height=120&section=footer&text=Built%20by%20Akilan%20Manivannan%20%26%20Akila%20Lourdes%20Miriyala%20Francis&fontSize=14&fontColor=ffffff&fontAlignY=65&animation=fadeIn" width="100%"/>
-
+<p align="center">
+  <img 
+    src="https://capsule-render.vercel.app/api?type=waving&amp;color=0%3A3DC9A0%2C50%3A5B5BB8%2C100%3A3D3D8A&amp;height=120&amp;section=footer&amp;text=Built%20by%20Akilan%20Manivannan%20and%20Akila%20Lourdes%20Miriyala%20Francis&amp;fontSize=14&amp;fontColor=ffffff&amp;fontAlignY=65"
+    width="100%"
+    alt="PhamilyOps Footer"
+  />
+</p>
 </div>
+
