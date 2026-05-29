@@ -938,8 +938,7 @@ function showToast(msg, dur = 3500) {
   // Create fresh toast
   const t = document.createElement('div');
   t.id = 'toast';
-  const icon = msg.startsWith('✅')||msg.startsWith('🎉') ? '✅' : msg.startsWith('❌') ? '❌' : msg.startsWith('⏰') ? '⏰' : '💬';
-  t.innerHTML = `<span style="font-size:14px;flex-shrink:0">${icon}</span><div style="flex:1">${msg.replace(/^[✅❌⏰💬🎯📄💼📧🔔⚡📊🛡️📝]/,'').trim()}</div><button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:14px;padding:0;margin-left:4px;flex-shrink:0">×</button>`;
+  t.innerHTML = '<div style="flex:1">' + msg + '</div><button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:16px;padding:0;margin-left:8px;flex-shrink:0;line-height:1">×</button>';
   t.style.cssText = 'display:flex;position:fixed;top:70px;right:16px;background:var(--pp);color:#fff;padding:10px 14px;border-radius:var(--r2);box-shadow:var(--shl);font-size:12px;font-weight:600;z-index:9999;max-width:300px;align-items:center;gap:8px;animation:slideInRight .3s ease;';
   document.body.appendChild(t);
   setTimeout(() => { if(t.parentElement) t.remove(); }, dur);
@@ -1263,13 +1262,7 @@ async function runScreening() {
 
   let data = {overall_score:score, rationale:`${name} shows ${fit.toLowerCase()} alignment with ${role} requirements. ${skills.length} relevant skills detected.`, strengths: skills.slice(0,3).map(s=>`Strong ${s} background`), concerns:score<80?['Could demonstrate more healthcare domain knowledge']:['Strong candidate — move quickly before competing offers'], screening_questions:qs, outreach_email:email, culture_fit:fit, recommendation:rec};
 
-  // Try Claude in background for richer analysis (non-blocking)
-  ai('You are a Phamily recruiter. Score this candidate. Return JSON only with keys: overall_score, rationale, strengths(array), concerns(array), screening_questions(array of 3), culture_fit, recommendation',
-    `Role: ${role}. Candidate: ${name}. Skills: ${skills.join(',')}. GitHub: ${github}. Notes: ${notes}. Score 0-100 and provide screening questions.`, 500
-  ).then(result => {
-    if(result) { try { const d=JSON.parse(result); if(d.overall_score) { data={...data,...d}; showScreenResult(data, name, skills); } } catch{} }
-  });
-
+  // Show instantly — no API wait
   showScreenResult(data, name, skills);
 }
 
