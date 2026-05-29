@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3D3D8A,50:5B5BB8,100:3DC9A0&height=200&section=header&text=PhamilyOps&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=AI-Native%20HR%20%26%20Operations%20Platform%20for%20Phamily&descAlignY=58&descSize=18&animation=fadeIn" />
+  <img
+    src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:3D3D8A,50:5B5BB8,100:3DC9A0&amp;height=200&amp;section=header&amp;text=PhamilyOps&amp;fontSize=60&amp;fontColor=ffffff&amp;fontAlignY=38&amp;desc=AI-Native%20Care%20Operations%20Platform%20for%20Chronic%20Care%20Management&amp;descAlignY=58&amp;descSize=18&amp;animation=fadeIn"
+    alt="PhamilyOps Header"
+  />
 </p>
 
 <div align="center">
