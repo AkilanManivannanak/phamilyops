@@ -1,4 +1,4 @@
-https://capsule-render.vercel.app/api?type=waving&color=0:3D3D8A,50:5B5BB8,100:3DC9A0&height=200&section=header&text=PhamilyOps&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=AI-Native%20HR%20%26%20Operations%20Platform%20for%20Phamily&descAlignY=58&descSize=18&animation=fadeIn
+![PhamilyOps Header](https://capsule-render.vercel.app/api?type=waving&color=0:3D3D8A,50:5B5BB8,100:3DC9A0&height=200&section=header&text=PhamilyOps&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=AI-Native%20HR%20%26%20Operations%20Platform%20for%20Phamily&descAlignY=58&descSize=18&animation=fadeIn)
 
 <div align="center">
 
