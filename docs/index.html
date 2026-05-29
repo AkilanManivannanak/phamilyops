@@ -1137,6 +1137,14 @@ function quickResumePreview(filename, size, text) {
     ${skills.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${skills.slice(0,10).map(s=>`<span style="background:var(--pp-xl);color:var(--pp);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px">${s}</span>`).join('')}</div>`:'<div style="font-size:10px;color:var(--pg-d)">📄 PDF uploaded — AI will analyze when you click Screen</div>'}
   </div>`;
   addNotif('📄 Resume ready', (nameFromFile||'Candidate')+' — click Screen to analyze', 'success');
+  
+  // For PDFs: show paste area so AI can actually score the content
+  if(!text) {
+    const pasteArea = document.createElement('div');
+    pasteArea.style.cssText = 'margin-top:10px;';
+    pasteArea.innerHTML = '<div style="font-size:10px;font-weight:700;color:var(--pp);margin-bottom:5px">📋 Paste resume text for AI scoring (PDF text not auto-readable)</div><textarea id="resume-paste" placeholder="Copy and paste your resume text here for accurate AI scoring..." style="width:100%;height:80px;font-size:11px;padding:8px;border:1.5px solid var(--pp);border-radius:8px;font-family:DM Sans,sans-serif;resize:vertical" oninput="window._uploadedResumeText=this.value;resumeText=this.value"></textarea>';
+    document.getElementById('resume-status').appendChild(pasteArea);
+  }
 }
 
 async function extractResumeInfo(text, filename) {
@@ -1236,7 +1244,10 @@ async function runScreening() {
 
   // Extract skills locally — instant, no API needed
   const skillMap = {python:'Python',pytorch:'PyTorch',fastapi:'FastAPI',claude:'Claude API',chatgpt:'ChatGPT',huggingface:'HuggingFace',sql:'SQL',docker:'Docker',react:'React',healthcare:'Healthcare',tensorflow:'TensorFlow',langchain:'LangChain',javascript:'JavaScript',typescript:'TypeScript','machine learning':'ML','data science':'Data Science',mongodb:'MongoDB',supabase:'Supabase',github:'GitHub'};
-  const tl = (text + ' ' + name + ' ' + notes + ' ' + github).toLowerCase();
+  // Get pasted text if PDF was uploaded
+  const pastedText = document.getElementById('resume-paste')?.value || '';
+  const allText = (text || pastedText || resumeText || '');
+  const tl = (allText + ' ' + name + ' ' + notes + ' ' + github).toLowerCase();
   const skills = [];
   Object.entries(skillMap).forEach(([k,v])=>{if(tl.includes(k))skills.push(v)});
 
