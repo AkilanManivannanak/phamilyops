@@ -878,12 +878,19 @@ async function ai(system, user, max = 1000) {
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': _k, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-ipc': 'true' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': _k,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-ipc': 'true',
+        'anthropic-beta': 'max-tokens-3-5-sonnet-2024-07-15'
+      },
       body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: max, system, messages: [{ role: 'user', content: user }] })
     });
+    if (!r.ok) { const err = await r.text(); console.error('API error:', err); return null; }
     const d = await r.json();
     return d.content?.[0]?.text || '';
-  } catch (e) { console.error('AI error', e); return ''; }
+  } catch (e) { console.error('AI error', e); return null; }
 }
 
 // ── BACKEND API ──
@@ -1048,8 +1055,66 @@ function onResumeUpload(e) {
   const s = document.getElementById('resume-status');
   s.style.display='block'; s.textContent=`📄 ${f.name} · Reading...`;
   const r = new FileReader();
-  r.onload = ev => { resumeText = ev.target.result; window._uploadedResumeText = resumeText; s.textContent=`✅ ${f.name} · ${Math.round(f.size/1024)}KB · Ready to screen`; addNotif('📄 Resume uploaded', f.name+' ready for AI screening','info'); };
+  r.onload = async ev => {
+    resumeText = ev.target.result;
+    window._uploadedResumeText = resumeText;
+    s.innerHTML=`✅ <strong>${f.name}</strong> · ${Math.round(f.size/1024)}KB · Extracting information...`;
+    addNotif('📄 Resume uploaded', f.name+' — extracting candidate info','info');
+    // Auto-extract and display resume info
+    await extractResumeInfo(resumeText, f.name);
+  };
   r.readAsText(f);
+}
+
+async function extractResumeInfo(text, filename) {
+  const s = document.getElementById('resume-status');
+  // Quick local extraction first
+  const skills = [];
+  const sm = {python:'Python',pytorch:'PyTorch',fastapi:'FastAPI','claude':'Claude API',chatgpt:'ChatGPT',huggingface:'HuggingFace',sql:'SQL',docker:'Docker',react:'React',healthcare:'Healthcare',tensorflow:'TensorFlow',javascript:'JavaScript',typescript:'TypeScript',langchain:'LangChain','machine learning':'Machine Learning','deep learning':'Deep Learning','data science':'Data Science'};
+  const tl = text.toLowerCase();
+  Object.entries(sm).forEach(([k,v])=>{if(tl.includes(k))skills.push(v)});
+
+  // Extract name from filename
+  const nameFromFile = filename.replace(/\.(pdf|txt|docx|doc)$/i,'').replace(/[_-]/g,' ').replace(/resume/gi,'').replace(/cv/gi,'').trim();
+
+  // Update candidate name field
+  const nameField = document.getElementById('cand-name');
+  if(nameField && nameField.value === 'Jordan Chen') nameField.value = nameFromFile || 'Candidate';
+
+  // AI extraction for detailed info
+  const result = await ai(
+    'Extract candidate information from resume. Return JSON only.',
+    `Extract from this resume:
+${text.slice(0,2000)}
+
+Return JSON: {"name":"","email":"","phone":"","education":[{"degree":"","school":"","year":""}],"experience":[{"role":"","company":"","duration":"","bullets":[]}],"skills":[],"projects":[{"name":"","description":""}],"summary":""}`
+  , 600);
+
+  let info = {};
+  try { info = JSON.parse(result||'{}'); } catch { info = {name:nameFromFile,skills,summary:'Candidate with relevant technical background.'}; }
+
+  // Update name field with extracted name
+  if(info.name && nameField) nameField.value = info.name;
+  const allSkills = [...new Set([...skills, ...(info.skills||[])])];
+
+  // Display extracted info
+  s.innerHTML = `
+  <div style="background:var(--pg-xl);border:1px solid var(--pg);border-radius:var(--r2);padding:14px;margin-top:2px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--pp),var(--pg));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0">${(info.name||nameFromFile||'C').charAt(0).toUpperCase()}</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">${info.name||nameFromFile||'Candidate'}</div>
+        <div style="font-size:10px;color:var(--tm)">${info.email||''} ${info.phone||''}</div>
+      </div>
+      <div style="margin-left:auto;font-size:10px;color:var(--pg-d);font-weight:600">✅ ${filename}</div>
+    </div>
+    ${info.summary?`<div style="font-size:11px;color:var(--t2);margin-bottom:10px;padding:8px;background:rgba(255,255,255,.6);border-radius:var(--r1)">${info.summary}</div>`:''}
+    ${allSkills.length?`<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--pg-d);margin-bottom:5px">SKILLS DETECTED</div><div style="display:flex;flex-wrap:wrap;gap:4px">${allSkills.slice(0,12).map(s=>`<span style="background:var(--pp-xl);color:var(--pp);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px">${s}</span>`).join('')}</div></div>`:''}
+    ${(info.education||[]).length?`<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--pg-d);margin-bottom:4px">EDUCATION</div>${info.education.map(e=>`<div style="font-size:10.5px;color:var(--t2)">🎓 ${e.degree||''} · ${e.school||''} ${e.year?'('+e.year+')':''}</div>`).join('')}</div>`:''}
+    ${(info.experience||[]).length?`<div style="margin-bottom:6px"><div style="font-size:10px;font-weight:700;color:var(--pg-d);margin-bottom:4px">EXPERIENCE</div>${info.experience.slice(0,3).map(e=>`<div style="font-size:10.5px;color:var(--t2);margin-bottom:3px">💼 <strong>${e.role||''}</strong> · ${e.company||''} ${e.duration?'· '+e.duration:''}</div>`).join('')}</div>`:''}
+    ${(info.projects||[]).length?`<div><div style="font-size:10px;font-weight:700;color:var(--pg-d);margin-bottom:4px">PROJECTS</div>${info.projects.slice(0,2).map(p=>`<div style="font-size:10.5px;color:var(--t2)">🚀 <strong>${p.name||''}</strong> — ${(p.description||'').slice(0,80)}</div>`).join('')}</div>`:''}
+  </div>`;
+  addNotif('✅ Resume extracted', `${info.name||nameFromFile} — ${allSkills.length} skills detected`, 'success');
 }
 function onResumeDrop(e) {
   e.preventDefault(); document.getElementById('upload-zone').classList.remove('dragover');
@@ -1057,7 +1122,36 @@ function onResumeDrop(e) {
 }
 function onWorkUpload(e) {
   workFiles = Array.from(e.target.files);
-  document.getElementById('work-status').textContent=`✅ ${workFiles.length} work sample(s): ${workFiles.map(f=>f.name).join(', ')}`;
+  const statusEl = document.getElementById('work-status');
+  statusEl.innerHTML = `<div style="padding:8px;background:var(--pp-xl);border-radius:var(--r1);font-size:11px;color:var(--pp)">📁 ${workFiles.length} file(s) uploaded — analyzing...</div>`;
+  // Read text files and extract info
+  workFiles.forEach(f => {
+    if(f.type.includes('text') || f.name.endsWith('.py') || f.name.endsWith('.js') || f.name.endsWith('.ipynb') || f.name.endsWith('.md')) {
+      const r = new FileReader();
+      r.onload = async ev => {
+        const text = ev.target.result;
+        const result = await ai(
+          'Analyze this code/work sample and extract key features and technologies. Be concise.',
+          `File: ${f.name}
+
+Content:
+${text.slice(0,1500)}
+
+Provide: 1) What this project does (1 sentence) 2) Technologies used 3) Key features (3 bullets) 4) Skill level shown`
+        , 300);
+        const existing = document.getElementById('work-status');
+        existing.innerHTML += `<div style="margin-top:7px;padding:9px 11px;background:var(--white);border:1px solid var(--bd);border-radius:var(--r1)">
+          <div style="font-size:11px;font-weight:700;color:var(--pp);margin-bottom:4px">📄 ${f.name}</div>
+          <div style="font-size:10.5px;color:var(--t2);white-space:pre-wrap">${result||'Work sample uploaded and ready for review.'}</div>
+        </div>`;
+        addNotif('💼 Work sample analyzed', f.name+' — features extracted', 'ai');
+      };
+      r.readAsText(f);
+    }
+  });
+  // Show all files
+  statusEl.innerHTML = `<div style="padding:8px;background:var(--pp-xl);border-radius:var(--r1);font-size:11px;color:var(--pp);margin-bottom:6px">💼 ${workFiles.length} work sample(s) uploaded: ${workFiles.map(f=>f.name).join(', ')}</div>`;
+  addNotif('💼 Work samples added', workFiles.length+' file(s) — analyzing content', 'info');
 }
 async function runScreening() {
   const name = document.getElementById('cand-name').value||'Candidate';
@@ -1373,12 +1467,42 @@ async function generateJD(){
   const title=document.getElementById('jd-title').value.trim();
   if(!title){showToast('❌ Enter a role title');return;}
   document.getElementById('jd-out').innerHTML=loader('Writing Phamily JD...');
+  document.getElementById('jd-out').innerHTML=loader('Calling Claude API to write JD...');
   const result=await ai(
     `You are Phamily's (Jaan Health) Head of People Operations. Write complete, compelling job descriptions in Phamily's exact voice. Phamily is an AI-based care management company serving healthcare providers. Phamily's 5 principles: Care, Curiosity, Clarity, Co-Creation, Craftsmanship. Be specific, mission-driven, and human. Never use generic corporate language.`,
     `Write a complete job description for:\nRole: ${title}\nTeam: ${document.getElementById('jd-team').value}\nType: ${document.getElementById('jd-type').value}\nLocation: ${document.getElementById('jd-loc').value}\nKey Responsibilities:\n${document.getElementById('jd-resp').value||'Standard responsibilities'}\nRequired Skills: ${document.getElementById('jd-skills').value||'Relevant skills'}\n\nInclude: About Phamily (2 sentences), Role overview, 5-7 Key responsibilities, Requirements, What you'll gain, Compensation range, Equal opportunity statement.`,
     1200
   );
-  lastJD=result||'Could not generate JD. Please check your connection.';
+  if (!result) {
+    // Local fallback JD
+    lastJD = `${document.getElementById('jd-title').value} — ${document.getElementById('jd-type').value}
+Location: ${document.getElementById('jd-loc').value} | Team: ${document.getElementById('jd-team').value}
+
+About Phamily
+Phamily (Jaan Health) is a leading AI-based care management company serving health systems, medical groups, and ACOs to deliver high-quality proactive care to hundreds of thousands of patients.
+
+Role Overview
+We are seeking a talented ${document.getElementById('jd-title').value} to join our ${document.getElementById('jd-team').value} team. This role sits at the intersection of AI and healthcare operations.
+
+Key Responsibilities
+${(document.getElementById('jd-resp').value||'Build AI-powered automation workflows\nDesign and ship production-ready systems\nPresent measurable impact to leadership').split('\n').map(r=>'• '+r.trim()).join('\n')}
+
+Requirements
+${(document.getElementById('jd-skills').value||'Python, AI tools, FastAPI, SQL').split(',').map(s=>'• '+s.trim()).join('\n')}
+• Currently enrolled in or pursuing a Bachelor's or Master's Degree
+• Builder mentality with comfort in high-ambiguity environments
+
+What You'll Gain
+• Real-world experience at a high-growth healthcare AI company
+• Exposure to executive leaders and cross-functional teams
+• Mentorship and professional development support
+
+Phamily's Five Principles: Care · Curiosity · Clarity · Co-Creation · Craftsmanship
+
+Phamily is an equal opportunity employer.`;
+  } else {
+    lastJD = result;
+  }
   document.getElementById('jd-out').textContent=lastJD;
   addNotif('📝 JD Generated', `${title} job description ready to copy`, 'ai');
 }
