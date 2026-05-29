@@ -1,59 +1,6 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=0&pause=0&color=3DC9A0&center=true&vCenter=true&multiline=true&width=900&height=130&lines=██████╗+██╗++██╗+█████╗+███╗+++███╗██╗██╗++██╗+++██╗+██████╗+██████╗+███████╗;██╔══██╗██║++██║██╔══██╗████╗+████║██║██║++╚██╗+██╔╝██╔═══██╗██╔══██╗██╔════╝;██████╔╝███████║███████║██╔████╔██║██║██║+++╚████╔╝+██║+++██║██████╔╝███████╗;██╔═══╝+██╔══██║██╔══██║██║╚██╔╝██║██║██║++++╚██╔╝++██║+++██║██╔═══╝+╚════██║;╚═╝+++++╚═╝++╚═╝╚═╝++╚═╝╚═╝++++╚═╝╚═╝╚══════╝╚═╝++++╚══════╝+╚═╝+++++███████║"/>
-</picture>
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" width="100%">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3D3D8A"/>
-      <stop offset="50%" style="stop-color:#5B5BB8"/>
-      <stop offset="100%" style="stop-color:#3DC9A0"/>
-    </linearGradient>
-    <linearGradient id="wave1" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#3DC9A0;stop-opacity:0.4"/>
-      <stop offset="100%" style="stop-color:#5B5BB8;stop-opacity:0.2"/>
-    </linearGradient>
-  </defs>
-  <!-- Background -->
-  <rect width="900" height="200" fill="url(#bg)" rx="0"/>
-  <!-- Wave shapes -->
-  <path d="M0,120 C150,80 300,160 450,110 C600,60 750,140 900,100 L900,200 L0,200 Z" fill="rgba(61,201,160,0.15)"/>
-  <path d="M0,150 C200,110 400,170 600,130 C750,100 850,150 900,130 L900,200 L0,200 Z" fill="rgba(91,91,184,0.2)"/>
-  <!-- Decorative circles -->
-  <circle cx="800" cy="50" r="80" fill="rgba(255,255,255,0.04)"/>
-  <circle cx="820" cy="80" r="45" fill="rgba(61,201,160,0.08)"/>
-  <circle cx="100" cy="160" r="60" fill="rgba(91,91,184,0.08)"/>
-  <!-- P Logo badge -->
-  <rect x="30" y="30" width="44" height="44" rx="10" fill="#3DC9A0"/>
-  <text x="52" y="60" font-family="Arial Black" font-size="24" font-weight="900" fill="white" text-anchor="middle">P</text>
-  <!-- Main title -->
-  <text x="86" y="58" font-family="Arial Black,sans-serif" font-size="28" font-weight="900" fill="white">PhamilyOps</text>
-  <!-- Subtitle -->
-  <text x="30" y="95" font-family="Arial,sans-serif" font-size="15" fill="rgba(255,255,255,0.85)">AI-Native HR &amp; Operations Platform</text>
-  <text x="30" y="116" font-family="Arial,sans-serif" font-size="12" fill="rgba(255,255,255,0.6)">Built exclusively for Phamily (Jaan Health) · 17 AI Modules · Fully Deployed</text>
-  <!-- Stats row -->
-  <rect x="30" y="135" width="110" height="40" rx="8" fill="rgba(255,255,255,0.1)"/>
-  <text x="85" y="152" font-family="Arial Black" font-size="14" font-weight="900" fill="#3DC9A0" text-anchor="middle">68%</text>
-  <text x="85" y="167" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">Faster Hiring</text>
-  <rect x="152" y="135" width="110" height="40" rx="8" fill="rgba(255,255,255,0.1)"/>
-  <text x="207" y="152" font-family="Arial Black" font-size="14" font-weight="900" fill="#3DC9A0" text-anchor="middle">142h</text>
-  <text x="207" y="167" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">Saved Monthly</text>
-  <rect x="274" y="135" width="110" height="40" rx="8" fill="rgba(255,255,255,0.1)"/>
-  <text x="329" y="152" font-family="Arial Black" font-size="14" font-weight="900" fill="#3DC9A0" text-anchor="middle">$7,100</text>
-  <text x="329" y="167" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">Cost Saved</text>
-  <rect x="396" y="135" width="110" height="40" rx="8" fill="rgba(255,255,255,0.1)"/>
-  <text x="451" y="152" font-family="Arial Black" font-size="14" font-weight="900" fill="#3DC9A0" text-anchor="middle">17</text>
-  <text x="451" y="167" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">AI Modules</text>
-  <rect x="518" y="135" width="110" height="40" rx="8" fill="rgba(255,255,255,0.1)"/>
-  <text x="573" y="152" font-family="Arial Black" font-size="14" font-weight="900" fill="#3DC9A0" text-anchor="middle">94%</text>
-  <text x="573" y="167" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">AI Resolution</text>
-  <!-- Live badge -->
-  <rect x="780" y="30" width="90" height="28" rx="14" fill="#3DC9A0"/>
-  <circle cx="798" cy="44" r="4" fill="white"/>
-  <text x="826" y="49" font-family="Arial" font-size="11" font-weight="bold" fill="white" text-anchor="middle">LIVE NOW</text>
-</svg>
+<img src="docs/phamilyops-banner.png" width="100%" alt="PhamilyOps — AI-Native HR & Operations Platform"/>
 
 ### Production-Grade AI-Native HR & Operations Platform
 ### Claude API · FastAPI · Supabase · pgvector · RAG · GitHub Pages
