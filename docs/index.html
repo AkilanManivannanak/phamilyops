@@ -1058,12 +1058,77 @@ function onResumeUpload(e) {
   r.onload = async ev => {
     resumeText = ev.target.result;
     window._uploadedResumeText = resumeText;
+    // Check if PDF (binary) — use filename-based extraction instead
+    const isPDF = f.name.toLowerCase().endsWith('.pdf');
+    const isReadable = !isPDF && resumeText.length > 0 && resumeText.charCodeAt(0) < 256;
     s.innerHTML=`✅ <strong>${f.name}</strong> · ${Math.round(f.size/1024)}KB · Extracting information...`;
-    addNotif('📄 Resume uploaded', f.name+' — extracting candidate info','info');
-    // Auto-extract and display resume info
-    await extractResumeInfo(resumeText, f.name);
+    addNotif('📄 Resume uploaded', f.name+' ready','info');
+    await extractResumeInfo(isReadable ? resumeText : '', f.name);
   };
+  // For PDFs use readAsText (may get partial) OR just use filename
+  if (f.name.toLowerCase().endsWith('.pdf')) {
+    // Show instant feedback for PDFs — don't try to parse binary
+    resumeText = '';
+    window._uploadedResumeText = '';
+    s.innerHTML=`✅ <strong>${f.name}</strong> · ${Math.round(f.size/1024)}KB · Ready to screen`;
+    addNotif('📄 PDF uploaded', f.name+' ready for AI screening','info');
+    // Extract name from filename for PDF
+    const nameFromPDF = f.name.replace(/\.(pdf)$/i,'').replace(/[_-]/g,' ').replace(/resume|cv/gi,'').trim();
+    const nameField = document.getElementById('cand-name');
+    if(nameField && (nameField.value === 'Jordan Chen' || !nameField.value)) nameField.value = nameFromPDF;
+    // Show minimal card for PDF
+    s.innerHTML = `<div style="background:var(--pg-xl);border:1px solid var(--pg);border-radius:var(--r2);padding:12px;margin-top:2px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--pp),var(--pg));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0">${nameFromPDF.charAt(0).toUpperCase()}</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--t1)">${nameFromPDF}</div>
+          <div style="font-size:10px;color:var(--tm)">PDF uploaded · ${Math.round(f.size/1024)}KB</div>
+        </div>
+        <div style="margin-left:auto;font-size:10px;color:var(--pg-d);font-weight:600">✅ Ready</div>
+      </div>
+      <div style="margin-top:9px;font-size:10px;color:var(--t2);padding:7px;background:rgba(255,255,255,.6);border-radius:var(--r1)">📄 PDF resume uploaded. Click <strong>Screen Candidate with AI</strong> to analyze and score.</div>
+    </div>`;
+    return;
+  }
   r.readAsText(f);
+}
+
+function quickResumePreview(filename, size, text) {
+  const s = document.getElementById('resume-status');
+  // Extract name from filename
+  const nameFromFile = filename
+    .replace(/\.(pdf|txt|docx|doc)$/i,'')
+    .replace(/[_-]/g,' ')
+    .replace(/resume/gi,'').replace(/cv/gi,'').replace(/Resume/gi,'')
+    .trim();
+
+  // Update candidate name field
+  const nameField = document.getElementById('cand-name');
+  if(nameField && (nameField.value === 'Jordan Chen' || !nameField.value)) {
+    nameField.value = nameFromFile || 'Candidate';
+  }
+
+  // Quick skill extraction from text (for non-PDFs)
+  const skills = [];
+  if(text) {
+    const sm = {python:'Python',pytorch:'PyTorch',fastapi:'FastAPI',claude:'Claude API',chatgpt:'ChatGPT',huggingface:'HuggingFace',sql:'SQL',docker:'Docker',react:'React',healthcare:'Healthcare',tensorflow:'TensorFlow',javascript:'JavaScript','machine learning':'ML','deep learning':'Deep Learning','data science':'Data Science',langchain:'LangChain'};
+    const tl = text.toLowerCase();
+    Object.entries(sm).forEach(([k,v])=>{if(tl.includes(k))skills.push(v)});
+  }
+
+  s.innerHTML = `
+  <div style="background:var(--pg-xl);border:1px solid var(--pg);border-radius:var(--r2);padding:12px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:${skills.length?'10px':'0'}">
+      <div style="width:34px;height:34px;background:linear-gradient(135deg,var(--pp),var(--pg));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0">${(nameFromFile||'C').charAt(0).toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">${nameFromFile||'Candidate'}</div>
+        <div style="font-size:10px;color:var(--tm)">${filename} · ${Math.round(size/1024)}KB · Ready to screen</div>
+      </div>
+      <span style="font-size:9px;font-weight:700;color:var(--pg-d);background:rgba(255,255,255,.6);padding:2px 7px;border-radius:20px">✅ Uploaded</span>
+    </div>
+    ${skills.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${skills.slice(0,10).map(s=>`<span style="background:var(--pp-xl);color:var(--pp);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px">${s}</span>`).join('')}</div>`:'<div style="font-size:10px;color:var(--pg-d)">📄 PDF uploaded — AI will analyze when you click Screen</div>'}
+  </div>`;
+  addNotif('📄 Resume ready', (nameFromFile||'Candidate')+' — click Screen to analyze', 'success');
 }
 
 async function extractResumeInfo(text, filename) {
