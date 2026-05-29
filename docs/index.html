@@ -1262,8 +1262,30 @@ async function runScreening() {
 
   let data = {overall_score:score, rationale:`${name} shows ${fit.toLowerCase()} alignment with ${role} requirements. ${skills.length} relevant skills detected.`, strengths: skills.slice(0,3).map(s=>`Strong ${s} background`), concerns:score<80?['Could demonstrate more healthcare domain knowledge']:['Strong candidate — move quickly before competing offers'], screening_questions:qs, outreach_email:email, culture_fit:fit, recommendation:rec};
 
-  // Show instantly — no API wait
+  // Show instantly with local score
   showScreenResult(data, name, skills);
+
+  // Then enhance with Claude in background — updates result when ready
+  setTimeout(async () => {
+    const aiResult = await ai(
+      'You are a senior recruiter at Phamily (Jaan Health). Analyze this candidate and return ONLY valid JSON.',
+      'Candidate: ' + name + '. Role: ' + role + '. Skills found: ' + skills.join(', ') + '. GitHub: ' + (github||'not provided') + '. Notes: ' + (notes||'none') + '. Resume text: ' + (text||'not provided').slice(0,500) + '. Return JSON: {"overall_score":85,"rationale":"2 sentence reason","strengths":["s1","s2","s3"],"concerns":["c1"],"screening_questions":["q1","q2","q3"],"culture_fit":"Strong","recommendation":"Move forward"}',
+      400
+    );
+    if (aiResult) {
+      try {
+        const enhanced = JSON.parse(aiResult);
+        if (enhanced.overall_score) {
+          // Merge AI data with local data
+          const merged = Object.assign({}, data, enhanced);
+          showScreenResult(merged, name, skills);
+          // Update the AI badge
+          const badge = document.getElementById('ai-enhance-badge');
+          if (badge) badge.innerHTML = '✨ AI-enhanced scoring';
+        }
+      } catch(e) { /* keep local score */ }
+    }
+  }, 100);
 }
 
 function showScreenResult(data, name, skills) {
@@ -1278,6 +1300,7 @@ function showScreenResult(data, name, skills) {
       <div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700">${name}</div>
         <div style="font-size:11px;color:var(--tm);margin-top:2px">${role} · ${data.recommendation||'Review'}</div>
+        <div id="ai-enhance-badge" style="font-size:9px;color:var(--pp);margin-top:3px">⚡ Scored · Enhancing with AI...</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px">${skills.slice(0,6).map(s=>`<span style="background:var(--pp-xl);color:var(--pp);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px">${s}</span>`).join('')}</div>
       </div>
     </div>
