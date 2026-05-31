@@ -179,14 +179,14 @@ USER REQUEST → AI PROCESSING → POLICY KNOWLEDGE → SERVE → FEEDBACK
 ──────────────────────────────────────────────────────────────────────────────
 ┌─────────────────────────────────────────────────────────────────────────┐
 │  FRONTEND (GitHub Pages)                                                │
-│  HTML/CSS/JS · Phamily brand (#5B5BB8 purple · #3DC9A0 green)          │
-│  17 interactive modules · Real-time Claude API calls                   │
-│  Notification bell · Dynamic time-aware greeting · PDF export          │
+│  HTML/CSS/JS · Phamily brand (#5B5BB8 purple · #3DC9A0 green)           │
+│  17 interactive modules · Real-time Claude API calls                    │
+│  Notification bell · Dynamic time-aware greeting · PDF export           │
 └──────────────────────────────┬──────────────────────────────────────────┘
                                │  HTTPS REST calls
-┌──────────────────────────────▼──────────────────────────────────────────┐
-│  BACKEND (FastAPI on Render)                                            │
-│  Python 3.11 · Async · 18 endpoints · p95 < 3s                        │
+┌──────────────────────────────▼─────────────────────────────────────────┐
+│  BACKEND (FastAPI on Render)                                           │
+│  Python 3.11 · Async · 18 endpoints · p95 < 3s                         │
 │  5 routers: screener · copilot · audit · automations · analytics       │
 │  Services: claude_service · nlp_service · vector_service               │
 │            ragas_service · safety_service                              │
@@ -194,7 +194,7 @@ USER REQUEST → AI PROCESSING → POLICY KNOWLEDGE → SERVE → FEEDBACK
                │                                           │
 ┌──────────────▼─────────────┐             ┌──────────────▼──────────────┐
 │  SUPABASE (PostgreSQL)     │             │  ANTHROPIC CLAUDE API       │
-│  5 tables + pgvector       │             │  claude-sonnet-4-5           │
+│  5 tables + pgvector       │             │  claude-sonnet-4-5          │
 │  1536-dim embeddings       │             │  Direct browser + backend   │
 │  18 HR policy docs indexed │             │  Streaming responses        │
 │  Row-level security (RLS)  │             │  JSON structured output     │
@@ -455,7 +455,7 @@ annual_roi = frequency * hours * 52 * 30  # 52 weeks · $30/hr labor
 │  JD match: "foundational workflow — scheduling"                      │
 ├──────────────────────────────────────────────────────────────────────┤
 │  TRAVEL COORDINATION                            1h 30m saved/trip    │
-│  ✓ Collecting travel preferences from 8 team members...             │
+│  ✓ Collecting travel preferences from 8 team members...              │
 │  ✓ Searching flight and hotel options...                             │
 │  ✓ Drafting 3 itinerary options...                                   │
 │  ✓ Itinerary sent — $2,400 budget optimized!                         │
@@ -463,7 +463,7 @@ annual_roi = frequency * hours * 52 * 30  # 52 weeks · $30/hr labor
 ├──────────────────────────────────────────────────────────────────────┤
 │  REQUEST ROUTING                                30 min saved/batch   │
 │  ✓ Receiving 7 pending employee requests...                          │
-│  ✓ Classifying: HR / IT / Finance / Ops / Legal...                  │
+│  ✓ Classifying: HR / IT / Finance / Ops / Legal...                   │
 │  ✓ Auto-assigning to correct team members...                         │
 │  ✓ 4 requests routed with SLA timers set!                            │
 └──────────────────────────────────────────────────────────────────────┘
